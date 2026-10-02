@@ -8,11 +8,7 @@
 .nav-btn small{font-size:9px;line-height:1.05;font-weight:800;letter-spacing:.01em}
 .new-tag{left:auto;right:5px;top:5px;color:#d9c36e;z-index:6}
 .holo-tag{left:5px;right:auto;top:5px;z-index:6}
-.game-card{
-  position:relative;aspect-ratio:.68;background:#0e1216;border:3px solid #4b5561;
-  box-shadow:4px 4px 0 #050608;display:flex;flex-direction:column;overflow:hidden;
-  color:var(--ink);text-align:left;min-width:0
-}
+.game-card{position:relative;aspect-ratio:2/3;background:#0e1216;border:3px solid #4b5561;box-shadow:4px 4px 0 #050608;display:flex;flex-direction:column;overflow:hidden;color:var(--ink);text-align:left;min-width:0}
 .game-card-head{padding:9px 9px 6px;border-bottom:2px solid #303740;min-height:52px}
 .game-card-name{font-size:14px;font-weight:900;line-height:1.05;padding-right:38px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .game-card-deck{font-size:8px;font-weight:800;letter-spacing:.1em;margin-top:5px;text-transform:uppercase}
@@ -40,11 +36,11 @@
 .card-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .collection-card-wrap{background:none;border:0;padding:0;color:inherit;display:block;width:100%;text-align:inherit}
 .deck-card-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
-.deck-card-cell{min-width:0;display:flex;flex-direction:column;gap:4px}
+.deck-card-cell{min-width:0;display:flex;flex-direction:column;gap:4px;align-self:start}
 .deck-card-tap{background:none;border:0;padding:0;color:inherit;display:block;width:100%;text-align:inherit;cursor:pointer}
-.deck-level-btn{width:100%;min-height:25px;border:1px solid #4a555f;background:#1a2026;color:var(--ink);font:inherit;font-size:7px;font-weight:900;padding:4px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.deck-level-btn{width:100%;height:29px;min-height:29px;border:1px solid #4a555f;background:#1a2026;color:var(--ink);font:inherit;font-size:7px;font-weight:900;padding:4px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .deck-level-btn:disabled{opacity:.32}
-.deck-card-cell.empty{aspect-ratio:.68;border:2px dashed #323a43;background:#0e1216;display:grid;place-items:center;color:#59636d;font-size:8px}
+.deck-card-cell.empty{aspect-ratio:2/3;border:2px dashed #323a43;background:#0e1216;display:grid;place-items:center;color:#59636d;font-size:8px}
 .operation-deck-panel{margin-top:10px}
 .summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .pack-summary{width:min(640px,100%);padding:14px 10px 24px;max-height:76dvh;overflow:auto}
@@ -61,13 +57,8 @@
 .tutorial-dagger:after{content:"";position:absolute;left:1px;top:27px;width:4px;height:10px;background:#7f6630}
 .story-actions{display:grid;grid-template-columns:1fr 1.5fr;gap:7px}
 .story-actions .btn:only-child{grid-column:1/-1}
-
-@media(max-width:560px){
-  .inventory-row{grid-template-columns:1fr}
-  .inventory-actions{min-width:0;grid-template-columns:repeat(4,1fr)}
-  .mini-btn{padding:7px 3px;font-size:8px}
-}
-@media(min-width:650px){
-  .card-grid{grid-template-columns:repeat(4,1fr)}
-  .summary-grid{grid-template-columns:repeat(5,1fr)}
-}
+.inventory-row{min-height:74px}
+.inventory-row .meta{min-height:20px}
+.inventory-actions{align-self:center}
+@media(max-width:560px){.inventory-row{grid-template-columns:1fr}.inventory-actions{min-width:0;grid-template-columns:repeat(4,1fr)}.mini-btn{padding:7px 3px;font-size:8px}}
+@media(min-width:650px){.card-grid{grid-template-columns:repeat(4,1fr)}.summary-grid{grid-template-columns:repeat(5,1fr)}}
