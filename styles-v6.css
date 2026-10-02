@@ -1,0 +1,33 @@
+/* LIKE-ROGUE V6 */
+html,body{height:100%;max-height:100%;overflow:hidden!important}
+body{overscroll-behavior:none}
+.app-shell{height:100dvh;min-height:100dvh;max-height:100dvh;overflow:hidden!important;padding-bottom:calc(96px + var(--safe-bottom))}
+.topbar{height:58px;min-height:58px}
+.screen{height:calc(100dvh - 58px - 96px - var(--safe-top) - var(--safe-bottom));max-height:calc(100dvh - 58px - 96px - var(--safe-top) - var(--safe-bottom));overflow:hidden!important;padding-bottom:8px}
+body.screen-scroll .screen{overflow-y:auto!important;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+body.screen-fixed .screen{overflow:hidden!important}
+.pack-cover-v6{padding:0!important;overflow:hidden;background:none!important;border-color:#59636d!important}
+.pack-cover-v6>img,.reveal-face.reveal-back>img{display:block;width:100%;height:100%;object-fit:fill;image-rendering:pixelated;image-rendering:crisp-edges;-webkit-user-drag:none}
+.reveal-face.reveal-back{padding:0!important;background:#090c10!important;border:0!important;overflow:hidden}
+.reveal-face.reveal-back:before{display:none!important}
+.reveal-card{border-color:#4e5861!important}
+@keyframes holoV6{0%,100%{border-color:#58c6c0;box-shadow:0 0 0 2px #58c6c0,4px 4px 0 #050608}25%{border-color:#c46da2;box-shadow:0 0 0 2px #c46da2,4px 4px 0 #050608}50%{border-color:#d0ad58;box-shadow:0 0 0 2px #d0ad58,4px 4px 0 #050608}75%{border-color:#769bd0;box-shadow:0 0 0 2px #769bd0,4px 4px 0 #050608}}
+.game-card.holo{animation:holoV6 1.05s steps(1,end) infinite!important}
+.game-card.holo .holo-tag{background:#11161b!important;border:2px solid currentColor!important;font-size:8px!important;font-weight:900!important;padding:3px 5px!important;z-index:9}
+.copy-indicator{left:auto!important;right:7px!important;top:7px!important}
+.collection-card-wrap{transition:transform .15s steps(4,end),opacity .15s steps(3,end)}
+.collection-card-wrap.copy-swipe-left{transform:translateX(-115%);opacity:0}
+.collection-card-wrap.copy-swipe-right{transform:translateX(115%);opacity:0}
+.collection-card-wrap.copy-enter-right{transform:translateX(115%);opacity:0}
+.collection-card-wrap.copy-enter-left{transform:translateX(-115%);opacity:0}
+.deck-head-v6{margin-bottom:8px}.deck-head-v6 .deck-help{margin:8px 0 0}
+.swap-banner{display:flex;align-items:center;gap:8px;justify-content:space-between}.swap-banner .mini-btn{flex:0 0 auto}
+.pack-summary-v6{max-height:82dvh;overflow-y:auto;padding:10px}
+.summary-grid-v6{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.pack-summary-card-v6{min-width:0;display:flex;flex-direction:column;gap:5px}
+.pack-summary-card-v6 .game-card{width:100%}
+.pack-delta{font-size:11px;font-weight:900;text-align:center;min-height:16px}
+.pack-delta.positive{color:#70bd7b}.pack-delta.negative{color:#c65e63}.pack-delta.neutral{color:#929aa1}
+.pack-equip-v6{width:100%;font-size:11px!important}
+.syndicate-stats-v6 .stat small{font-size:10px}.syndicate-stats-v6 .stat b{font-size:16px}
+@media(max-width:430px){.app-shell{padding-bottom:calc(94px + var(--safe-bottom))}.screen{height:calc(100dvh - 58px - 94px - var(--safe-top) - var(--safe-bottom));max-height:calc(100dvh - 58px - 94px - var(--safe-top) - var(--safe-bottom))}.hideout-room-v5{height:190px}.pack-card-v5{min-height:210px}.pack-card-v5 .pack-mini{height:92px}.pack-summary-v6{max-height:86dvh}}
