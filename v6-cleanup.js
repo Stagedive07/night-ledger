@@ -1,0 +1,1 @@
+(() => { state.uiHelpSeenV6 ||= {}; ['battle','hideout','packs','deck','library','syndicate','settings'].forEach(k=>state.uiHelpSeenV6[k]=true); save(); })();
