@@ -18,13 +18,17 @@
     try{
       let base=cache.get(src);
       if(!base){base=new Audio(src);base.preload='auto';cache.set(src,base);}
-      const a=base.cloneNode();a.volume=v;a.play().catch(()=>{});
+      const a=base.cloneNode();
+      a.volume=v;
+      a.play().catch(()=>{});
     }catch(e){}
   }
   window.lr2PlayExactSfx=play;
 
+  // Keep older UI callers working while routing every sound to the supplied files.
   window.playUISoundV5=function(kind='select'){
     if(kind==='flip')return play('flipUp');
+    if(kind==='flipDown')return play('flipDown');
     if(kind==='coin')return play('coin');
     if(kind==='packOpen')return play('packOpen');
     if(kind==='stack')return play('stack');
@@ -37,12 +41,21 @@
       card.dataset.lr2FoilBound='1';
       const move=e=>{
         const r=card.getBoundingClientRect(),p=e.touches?.[0]||e;
-        card.style.setProperty('--mx',`${clamp(((p.clientX-r.left)/r.width)*100,0,100)}%`);
-        card.style.setProperty('--my',`${clamp(((p.clientY-r.top)/r.height)*100,0,100)}%`);
+        const x=clamp(((p.clientX-r.left)/r.width)*100,0,100);
+        const y=clamp(((p.clientY-r.top)/r.height)*100,0,100);
+        card.style.setProperty('--mx',`${x}%`);
+        card.style.setProperty('--my',`${y}%`);
+        card.style.setProperty('--rx',`${((y-50)/16).toFixed(2)}deg`);
+        card.style.setProperty('--ry',`${((50-x)/13).toFixed(2)}deg`);
+      };
+      const reset=()=>{
+        card.style.setProperty('--mx','50%');card.style.setProperty('--my','50%');
+        card.style.setProperty('--rx','0deg');card.style.setProperty('--ry','0deg');
       };
       card.addEventListener('pointermove',move,{passive:true});
       card.addEventListener('touchmove',move,{passive:true});
-      card.addEventListener('pointerleave',()=>{card.style.setProperty('--mx','50%');card.style.setProperty('--my','50%');},{passive:true});
+      card.addEventListener('pointerleave',reset,{passive:true});
+      card.addEventListener('touchend',reset,{passive:true});
     });
   }
 
@@ -54,13 +67,14 @@
     cover.onclick=()=>{
       if(cover.dataset.opening)return;
       cover.dataset.opening='1';
+      // Full Pack opening long.ogg belongs to the pack-opening animation itself.
       play('packOpen');
       cover.classList.add('shake','lr2-pack-opening');
       setTimeout(()=>{
-        cover.classList.remove('shake');cover.classList.add('opening');
+        cover.classList.remove('shake');cover.classList.add('opening','lr2-pack-rip-away');
         document.getElementById('pack-rip')?.classList.add('fly');
-        setTimeout(()=>startReveal(packTier,pack,price,done),state.settings.reducedMotion?10:720);
-      },state.settings.reducedMotion?10:420);
+        setTimeout(()=>startReveal(packTier,pack,price,done),state.settings.reducedMotion?10:760);
+      },state.settings.reducedMotion?10:440);
     };
   };
 
@@ -108,8 +122,9 @@
     }
 
     function renderSummary(withSound=true){
+      // CardFlip10Stack.ogg fires exactly as all 10 cards settle into the review grid.
       if(withSound)play('stack');
-      const rows=pack.map(c=>`<div class="pack-summary-card-v6">${gameCardMarkup(c,{compact:true,showNew:c.isNew,showLevel:false})}${deltaHtml(c)}<button class="mini-btn pack-equip-v6" data-equip-v6="${c.uid}">${isOperationDef(getDef(c))?(state.deck.includes(c.uid)?'EQUIPPED':'EQUIP'):(state.syndicate.includes(c.uid)?'ASSIGNED':'ASSIGN')}</button></div>`).join('');
+      const rows=pack.map((c,i)=>`<div class="pack-summary-card-v6 lr2-summary-card" style="--summary-i:${i}">${gameCardMarkup(c,{compact:true,showNew:c.isNew,showLevel:false})}${deltaHtml(c)}<button class="mini-btn pack-equip-v6" data-equip-v6="${c.uid}">${isOperationDef(getDef(c))?(state.deck.includes(c.uid)?'EQUIPPED':'EQUIP'):(state.syndicate.includes(c.uid)?'ASSIGNED':'ASSIGN')}</button></div>`).join('');
       stack.innerHTML=`<div class="pack-summary pack-summary-v6 ${withSound?'lr2-stack-in':''}"><div class="kicker">PACK COMPLETE</div><h2>${GD.tierData(packTier).name.toUpperCase()} DECK</h2><div class="summary-grid summary-grid-v6">${rows}</div><button class="btn primary" id="done-v6" style="width:100%;margin-top:10px">DONE</button></div>`;
       bindHolo(stack);
       stack.querySelectorAll('[data-equip-v6]').forEach(b=>b.onclick=()=>equipPackCard(b.dataset.equipV6));
@@ -125,23 +140,29 @@
         const inst=pack[index+j],el=document.createElement('div');
         el.className=`reveal-card lr2-reveal-card${inst.holo?' contains-holo':''}`;
         el.style.zIndex=10-j;
+        el.style.setProperty('--stack-i',String(j));
         el.style.transform=['translate(0,0) rotate(0deg) scale(1)','translate(13px,17px) rotate(2deg) scale(.96)','translate(-12px,28px) rotate(-2.5deg) scale(.92)','translate(18px,39px) rotate(3deg) scale(.88)'][j];
         el.innerHTML=`<div class="flip-inner">${face(inst)}</div>`;
         if(j===0)el.onclick=()=>{
           if(busy)return;
           const inner=el.querySelector('.flip-inner');
           if(!faceUp){
-            busy=true;faceUp=true;play('flipUp');
+            busy=true;faceUp=true;
+            // Face-down -> face-up uses CardFlipSingleUp.ogg.
+            play('flipUp');
             el.classList.add('lr2-flipping-up');inner.classList.add('faceup','lr2-flip-forward');
             setTimeout(()=>{
               inner.classList.remove('lr2-flip-forward');el.classList.remove('lr2-flipping-up');busy=false;
               const hint=stack.querySelector('.reveal-hint');if(hint)hint.textContent='TAP FOR NEXT CARD';
               bindHolo(el);
-            },state.settings.reducedMotion?20:780);
+            },state.settings.reducedMotion?20:860);
           }else{
-            busy=true;play('flipDown');el.onclick=null;el.classList.add('lr2-sorting-out');
+            busy=true;
+            // Sorting the revealed card away uses CardFlipSingleDown.ogg.
+            play('flipDown');
+            el.onclick=null;el.classList.add('lr2-sorting-out');
             if(state.settings.reducedMotion){index++;draw();}
-            else{el.classList.add(['swipe-r0','swipe-r1','swipe-r2','swipe-r3'][index%4]);setTimeout(()=>{index++;draw();},420);}
+            else{el.classList.add(['swipe-r0','swipe-r1','swipe-r2','swipe-r3'][index%4]);setTimeout(()=>{index++;draw();},500);}
           }
         };
         stack.appendChild(el);
@@ -151,8 +172,28 @@
     draw();
   };
 
-  if(typeof sellCard==='function'){
+  // Coin.ogg fires only when an actual duplicate sale is allowed and submitted.
+  if(typeof sellCard==='function'&&!sellCard.__lr2CoinWrapped){
     const baseSellCard=sellCard;
-    sellCard=function(id){const inst=getInstance(id);if(inst&&canSell(inst))play('coin');return baseSellCard(id);};
+    const wrapped=function(id){
+      const inst=getInstance(id);
+      if(inst&&canSell(inst))play('coin');
+      return baseSellCard(id);
+    };
+    wrapped.__lr2CoinWrapped=true;
+    sellCard=wrapped;
   }
+
+  // Bind foil interaction to cards rendered outside pack opening too.
+  const baseRender=window.render;
+  if(typeof baseRender==='function'&&!baseRender.__lr2FoilWrapped){
+    const wrappedRender=function(...args){
+      const out=baseRender.apply(this,args);
+      requestAnimationFrame(()=>bindHolo(document));
+      return out;
+    };
+    wrappedRender.__lr2FoilWrapped=true;
+    window.render=wrappedRender;
+  }
+  requestAnimationFrame(()=>bindHolo(document));
 })();
