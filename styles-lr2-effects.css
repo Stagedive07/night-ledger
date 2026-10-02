@@ -1,0 +1,116 @@
+/* LR2 card effects — adapted from established CSS card/glare + flip patterns. */
+
+/* Keep rarity completely hidden while a pack card is face-down. */
+.reveal-card.holo{
+  animation:none!important;
+  border-color:#59636d!important;
+  outline:0!important;
+}
+
+/* CodePen-inspired holo architecture: slow border + separate translucent shine/glare layers. */
+@keyframes lr2HoloBorderSlow{
+  0%{border-color:#67d4cb;box-shadow:0 0 0 2px #67d4cb,4px 4px 0 #050608}
+  25%{border-color:#829fe0;box-shadow:0 0 0 2px #829fe0,4px 4px 0 #050608}
+  50%{border-color:#cf82b8;box-shadow:0 0 0 2px #cf82b8,4px 4px 0 #050608}
+  75%{border-color:#d2b45f;box-shadow:0 0 0 2px #d2b45f,4px 4px 0 #050608}
+  100%{border-color:#67d4cb;box-shadow:0 0 0 2px #67d4cb,4px 4px 0 #050608}
+}
+@keyframes lr2HoloDrift{
+  0%{background-position:15% 40%,20% 50%}
+  50%{background-position:85% 60%,80% 50%}
+  100%{background-position:15% 40%,20% 50%}
+}
+.game-card.holo{
+  position:relative;
+  isolation:isolate;
+  border-width:4px!important;
+  outline:2px solid rgba(225,229,232,.9)!important;
+  outline-offset:-7px!important;
+  animation:lr2HoloBorderSlow 22s linear infinite!important;
+}
+.game-card.holo::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:7;
+  pointer-events:none;
+  opacity:.13;
+  mix-blend-mode:screen;
+  background-image:
+    repeating-linear-gradient(125deg,
+      rgba(94,231,218,.20) 0 7%,
+      rgba(112,151,255,.15) 9% 15%,
+      rgba(220,111,197,.18) 17% 23%,
+      rgba(240,202,91,.14) 25% 31%,
+      rgba(94,231,218,.20) 33% 40%),
+    linear-gradient(115deg,
+      rgba(92,220,209,.20),
+      rgba(100,139,230,.15),
+      rgba(214,102,182,.18),
+      rgba(232,191,80,.14),
+      rgba(92,220,209,.20));
+  background-size:230% 230%,260% 260%;
+  background-position:var(--mx,50%) var(--my,50%),50% 50%;
+  transition:background-position 1.4s ease-out,opacity .5s ease;
+  animation:lr2HoloDrift 28s ease-in-out infinite;
+}
+.game-card.holo::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:8;
+  pointer-events:none;
+  opacity:.11;
+  mix-blend-mode:screen;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.50) 0,rgba(214,240,255,.18) 12%,rgba(255,255,255,0) 38%);
+  transition:background-position 1.4s ease-out,opacity .5s ease;
+}
+.game-card.holo .game-card-head,
+.game-card.holo .game-card-art,
+.game-card.holo .game-card-bottom,
+.game-card.holo .new-tag{position:relative;z-index:9}
+.game-card.holo .holo-tag{z-index:12!important}
+
+/* Give long lore/ability cards more physical room before shrinking text. */
+.game-card.text-long .game-card-art{height:47%!important}
+.game-card.text-xlong .game-card-art{height:43%!important}
+.game-card.text-xxlong .game-card-art{height:39%!important}
+.game-card.text-long .game-card-bottom,
+.game-card.text-xlong .game-card-bottom,
+.game-card.text-xxlong .game-card-bottom{padding-top:6px!important}
+
+/* dev.to-style 3D flip: perspective + preserve-3d + hidden backfaces. */
+.reveal-card{
+  perspective:950px!important;
+  transform-style:preserve-3d!important;
+}
+.flip-inner{
+  position:relative!important;
+  width:100%!important;
+  height:100%!important;
+  transform-style:preserve-3d!important;
+  -webkit-transform-style:preserve-3d!important;
+  transform:rotateY(0deg)!important;
+  transition:transform .72s cubic-bezier(.22,.72,.24,1)!important;
+  will-change:transform;
+}
+.flip-inner.faceup{transform:rotateY(180deg)!important}
+.reveal-face{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  backface-visibility:hidden!important;
+  -webkit-backface-visibility:hidden!important;
+  transform-style:preserve-3d!important;
+}
+.reveal-face.reveal-back{transform:rotateY(0deg)!important}
+.reveal-face.reveal-front{transform:rotateY(180deg)!important}
+
+/* Slight lift during the flip without changing the pixel-card silhouette. */
+.reveal-card:has(.flip-inner.faceup){filter:drop-shadow(0 9px 10px rgba(0,0,0,.32))}
+
+@media (prefers-reduced-motion:reduce){
+  .flip-inner{transition-duration:.08s!important}
+  .game-card.holo,.game-card.holo::before{animation:none!important}
+}
