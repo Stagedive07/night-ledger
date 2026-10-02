@@ -3,7 +3,7 @@ name: Decode Street Card Back
 on:
   push:
     paths:
-      - 'assets/card-art/street-deck-back.webp.b64.txt'
+      - 'assets/card-art/backchunks/**'
       - '.github/workflows/decode-card-back.yml'
   workflow_dispatch:
 
@@ -16,7 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Decode card back
-        run: base64 --decode assets/card-art/street-deck-back.webp.b64.txt > assets/card-art/street-deck-back.webp
+        run: |
+          cat assets/card-art/backchunks/*.txt | tr -d '\n\r ' | base64 --decode > assets/card-art/street-deck-back.webp
+          file assets/card-art/street-deck-back.webp
+          test -s assets/card-art/street-deck-back.webp
       - name: Commit decoded asset
         run: |
           git config user.name "github-actions[bot]"
