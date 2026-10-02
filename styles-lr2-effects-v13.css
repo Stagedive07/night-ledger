@@ -1,0 +1,58 @@
+/* LR2 v13 visibility pass: ensure the reference-based effects visibly register in normal play. */
+.game-card.holo{
+  transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transform-style:preserve-3d;
+  transition:transform .35s ease-out;
+  background-color:#11171b!important;
+  background-image:linear-gradient(128deg,
+    rgba(62,224,203,.10) 0%,
+    rgba(101,143,245,.085) 24%,
+    rgba(225,98,191,.105) 49%,
+    rgba(238,191,68,.085) 73%,
+    rgba(62,224,203,.10) 100%)!important;
+  background-size:240% 240%!important;
+  box-shadow:inset 0 0 26px rgba(116,216,255,.08),4px 4px 0 #050608;
+}
+.game-card.holo::before{
+  opacity:.42!important;
+  filter:saturate(1.32) contrast(1.05);
+}
+.game-card.holo::after{opacity:.31!important}
+.game-card.holo .game-card-art::after{opacity:1!important}
+.game-card.holo .game-card-name,.game-card.holo .game-card-deck,
+.game-card.holo .game-card-ability,.game-card.holo .game-card-lore,
+.game-card.holo .game-card-footer{position:relative;z-index:43}
+
+/* Make the sorting action visually obvious before the card is replaced. */
+.reveal-card.lr2-sorting-out.swipe-r0,
+.reveal-card.lr2-sorting-out.swipe-r1,
+.reveal-card.lr2-sorting-out.swipe-r2,
+.reveal-card.lr2-sorting-out.swipe-r3{
+  filter:drop-shadow(0 16px 12px rgba(0,0,0,.55));
+}
+
+/* The summary should arrive as a perceptible ten-card cascade, not a near-instant paint. */
+@keyframes lr2SummaryCardInV13{
+  0%{opacity:0;transform:translateY(36px) rotate(-3deg) scale(.86)}
+  55%{opacity:1;transform:translateY(-7px) rotate(1deg) scale(1.025)}
+  78%{transform:translateY(3px) rotate(-.35deg) scale(.992)}
+  100%{opacity:1;transform:none}
+}
+.pack-summary-v6.lr2-stack-in .lr2-summary-card{
+  opacity:0;
+  animation:lr2SummaryCardInV13 .76s cubic-bezier(.18,.75,.18,1) forwards!important;
+  animation-delay:calc(var(--summary-i) * 95ms + 80ms)!important;
+}
+
+/* Stronger readable card lift during the flip. */
+.reveal-card.lr2-flipping-up{
+  scale:1.035;
+  filter:drop-shadow(0 22px 16px rgba(0,0,0,.58));
+}
+
+@media (prefers-reduced-motion:reduce){
+  .game-card.holo{transform:none!important;transition:none!important}
+  .pack-summary-v6.lr2-stack-in .lr2-summary-card{animation:none!important;opacity:1!important}
+}
+body.reduce-motion .game-card.holo{transform:none!important;transition:none!important}
+body.reduce-motion .pack-summary-v6.lr2-stack-in .lr2-summary-card{animation:none!important;opacity:1!important}
