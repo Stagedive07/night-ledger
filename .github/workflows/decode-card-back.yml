@@ -1,0 +1,28 @@
+name: Decode Street Card Back
+
+on:
+  push:
+    paths:
+      - 'assets/card-art/street-deck-back.webp.b64.txt'
+      - '.github/workflows/decode-card-back.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  decode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decode card back
+        run: base64 --decode assets/card-art/street-deck-back.webp.b64.txt > assets/card-art/street-deck-back.webp
+      - name: Commit decoded asset
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/card-art/street-deck-back.webp
+          if ! git diff --cached --quiet; then
+            git commit -m "Add sharp Street deck card back"
+            git push
+          fi
