@@ -6,14 +6,61 @@
     packOpen: 'assets/audio/full-pack-opening.ogg',
     coin: 'assets/audio/coin.ogg'
   };
+
+  // Exact user-uploaded OGG files are stored as base64 text because the connected
+  // GitHub binary uploader was altering/substituting the small assets. Rebuild the
+  // original bytes as Blob URLs in the browser before the player opens a pack.
+  const EXACT_PARTS = {
+    flipUp: ['audio-build/up.b64'],
+    flipDown: ['audio-build/down.b64'],
+    stack: ['audio-build/exact-stack-0.b64','audio-build/exact-stack-12.b64','audio-build/exact-stack-34.b64'],
+    packOpen: ['audio-build/exact-pack-01.b64','audio-build/exact-pack-23.b64'],
+    coin: ['audio-build/exact-coin.b64']
+  };
+  const exactUrls = Object.create(null);
+  const exactState = Object.create(null);
   const cache = new Map();
+
+  function base64ToOggUrl(text){
+    const clean=String(text||'').replace(/\s+/g,'');
+    const raw=atob(clean),bytes=new Uint8Array(raw.length);
+    for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
+    return URL.createObjectURL(new Blob([bytes],{type:'audio/ogg'}));
+  }
+  async function loadExact(kind){
+    if(exactUrls[kind])return exactUrls[kind];
+    if(exactState[kind]?.promise)return exactState[kind].promise;
+    const parts=EXACT_PARTS[kind]||[];
+    const stateRef=exactState[kind]={ready:false,error:null,promise:null};
+    stateRef.promise=Promise.all(parts.map(url=>fetch(`${url}?v=1`,{cache:'force-cache'}).then(r=>{
+      if(!r.ok)throw new Error(`${url}: ${r.status}`);
+      return r.text();
+    }))).then(chunks=>{
+      const url=base64ToOggUrl(chunks.join(''));
+      exactUrls[kind]=url;
+      stateRef.ready=true;
+      return url;
+    }).catch(err=>{
+      stateRef.error=String(err?.message||err);
+      console.warn('LR2 exact SFX preload failed',kind,err);
+      return SFX[kind];
+    });
+    return stateRef.promise;
+  }
+  Object.keys(EXACT_PARTS).forEach(loadExact);
+  window.LR2ExactAudio={
+    state:exactState,
+    urls:exactUrls,
+    ready:()=>Object.keys(EXACT_PARTS).every(k=>exactState[k]?.ready),
+    preload:()=>Promise.all(Object.keys(EXACT_PARTS).map(loadExact))
+  };
 
   function volume(){
     if(typeof state?.settings?.soundVolume === 'number') return clamp(state.settings.soundVolume,0,1);
     return state?.settings?.sound ? .7 : 0;
   }
   function play(kind){
-    const v=volume(),src=SFX[kind];
+    const v=volume(),src=exactUrls[kind]||SFX[kind];
     if(v<=0||!src)return;
     try{
       let base=cache.get(src);
