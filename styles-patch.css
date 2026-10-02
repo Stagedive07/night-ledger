@@ -1,0 +1,12 @@
+/* BUILD III PATCH */
+.game-card-art{overflow:hidden;border-style:solid;background:#0b0d10}
+.game-card-art img{display:block;width:100%;height:100%;object-fit:cover;image-rendering:pixelated;pointer-events:none;user-select:none}
+.deck-card-cell{min-height:0}
+.deck-level-btn{height:38px;min-height:38px;max-height:38px;padding:4px 2px;font-size:7px;line-height:1.05;white-space:normal;overflow:hidden;text-overflow:clip;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px}
+.deck-level-btn span{display:block;font-size:6px;color:#c8c1af;white-space:nowrap}
+.inventory-row{min-height:84px;grid-template-rows:auto}
+.inventory-actions{min-height:38px;align-items:stretch}
+.inventory-actions .mini-btn{height:38px;min-height:38px;max-height:38px;padding:3px 4px;line-height:1.05;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px;overflow:hidden}
+.inventory-actions .mini-btn span{display:block;font-size:7px;color:#c8c1af;white-space:nowrap}
+.inventory-actions .level-action{border-color:#806d3e;background:#282217}
+@media(max-width:560px){.inventory-row{min-height:112px}.inventory-actions{height:40px;min-height:40px}.inventory-actions .mini-btn{height:40px;min-height:40px;max-height:40px;font-size:8px}.deck-level-btn{height:40px;min-height:40px;max-height:40px}}
