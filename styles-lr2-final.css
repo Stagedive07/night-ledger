@@ -1,0 +1,44 @@
+/* LR2 final card/pack visibility pass */
+@keyframes lr2FinalFoilDrift{0%{background-position:0% 42%}50%{background-position:100% 58%}100%{background-position:0% 42%}}
+@keyframes lr2FinalBorderDrift{0%,100%{border-color:#6edbd2}25%{border-color:#91a8f0}50%{border-color:#dc91c8}75%{border-color:#ddc36c}}
+
+.game-card.holo{
+  --mx:50%;--my:50%;
+  animation:lr2FinalBorderDrift 42s linear infinite!important;
+  background-color:#11171b!important;
+  background-image:linear-gradient(120deg,rgba(75,232,211,.15),rgba(112,151,255,.13) 24%,rgba(231,107,197,.16) 50%,rgba(244,207,94,.13) 75%,rgba(75,232,211,.15))!important;
+  background-size:260% 260%!important;
+  box-shadow:inset 0 0 30px rgba(130,220,255,.10),4px 4px 0 #050608!important;
+}
+.game-card.holo::before{
+  opacity:.56!important;
+  background-image:
+    repeating-linear-gradient(118deg,rgba(95,235,219,.30) 0 6%,rgba(95,235,219,0) 8% 13%,rgba(118,155,255,.27) 15% 21%,rgba(118,155,255,0) 23% 28%,rgba(226,112,197,.29) 30% 36%,rgba(226,112,197,0) 38% 43%,rgba(244,205,91,.25) 45% 51%,rgba(244,205,91,0) 53% 58%),
+    linear-gradient(128deg,rgba(79,229,213,.32),rgba(105,145,239,.24) 28%,rgba(217,102,185,.30) 52%,rgba(237,196,79,.24) 74%,rgba(79,229,213,.32))!important;
+  background-size:300% 300%,260% 260%!important;
+  background-position:var(--mx) var(--my),0% 50%!important;
+  animation:lr2FinalFoilDrift 46s ease-in-out infinite!important;
+  mix-blend-mode:screen!important;
+}
+.game-card.holo::after{
+  opacity:.42!important;
+  background:radial-gradient(circle at var(--mx) var(--my),rgba(255,255,255,.58) 0 3%,rgba(179,228,255,.26) 8%,rgba(255,255,255,.10) 20%,rgba(255,255,255,0) 44%)!important;
+}
+.game-card.holo .game-card-art{position:relative!important}
+.game-card.holo .game-card-art::after{
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:8;
+  background:linear-gradient(125deg,rgba(100,255,231,.10),rgba(130,161,255,.13),rgba(255,128,211,.12),rgba(255,224,116,.10),rgba(100,255,231,.10));
+  background-size:250% 250%;animation:lr2FinalFoilDrift 38s ease-in-out infinite;mix-blend-mode:screen;
+}
+.holo-tag{box-shadow:0 0 0 1px rgba(116,221,212,.35),0 0 10px rgba(116,221,212,.20)!important}
+
+/* Make the physical card flip read clearly, not like an instant face swap. */
+.reveal-stack.lr2-reveal-stack{perspective:1350px!important}
+.flip-inner.lr2-flip-forward{animation-duration:.92s!important}
+.reveal-card.lr2-flipping-up{scale:1.055!important;filter:drop-shadow(0 26px 18px rgba(0,0,0,.62))!important}
+
+/* Ten-card review lands as a deliberate fan/cascade. */
+.pack-summary-v6.lr2-stack-in .lr2-summary-card{animation-duration:.88s!important;animation-delay:calc(var(--summary-i) * 105ms + 80ms)!important}
+
+@media (prefers-reduced-motion:reduce){.game-card.holo,.game-card.holo::before,.game-card.holo::after,.game-card.holo .game-card-art::after{animation:none!important}}
+body.reduce-motion .game-card.holo,body.reduce-motion .game-card.holo::before,body.reduce-motion .game-card.holo::after,body.reduce-motion .game-card.holo .game-card-art::after{animation:none!important}
