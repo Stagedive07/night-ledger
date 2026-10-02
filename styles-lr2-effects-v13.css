@@ -23,13 +23,16 @@
 .game-card.holo .game-card-ability,.game-card.holo .game-card-lore,
 .game-card.holo .game-card-footer{position:relative;z-index:43}
 
-/* Make the sorting action visually obvious before the card is replaced. */
-.reveal-card.lr2-sorting-out.swipe-r0,
-.reveal-card.lr2-sorting-out.swipe-r1,
-.reveal-card.lr2-sorting-out.swipe-r2,
-.reveal-card.lr2-sorting-out.swipe-r3{
-  filter:drop-shadow(0 16px 12px rgba(0,0,0,.55));
-}
+/* Make the sorting action visually obvious before the next card replaces it. */
+@keyframes lr2SortR0V13{0%{opacity:1;translate:0 0;rotate:0deg;scale:1}22%{opacity:1;translate:0 -13px;rotate:3deg;scale:1.05}100%{opacity:0;translate:195% -24%;rotate:24deg;scale:.76}}
+@keyframes lr2SortR1V13{0%{opacity:1;translate:0 0;rotate:0deg;scale:1}22%{opacity:1;translate:0 -13px;rotate:-3deg;scale:1.05}100%{opacity:0;translate:-190% 17%;rotate:-23deg;scale:.76}}
+@keyframes lr2SortR2V13{0%{opacity:1;translate:0 0;rotate:0deg;scale:1}22%{opacity:1;translate:0 -13px;rotate:4deg;scale:1.05}100%{opacity:0;translate:185% 24%;rotate:27deg;scale:.74}}
+@keyframes lr2SortR3V13{0%{opacity:1;translate:0 0;rotate:0deg;scale:1}22%{opacity:1;translate:0 -13px;rotate:-4deg;scale:1.05}100%{opacity:0;translate:-188% -21%;rotate:-26deg;scale:.74}}
+.reveal-card.lr2-sorting-out.swipe-r0{animation:lr2SortR0V13 .50s cubic-bezier(.28,.04,.55,1) both!important}
+.reveal-card.lr2-sorting-out.swipe-r1{animation:lr2SortR1V13 .50s cubic-bezier(.28,.04,.55,1) both!important}
+.reveal-card.lr2-sorting-out.swipe-r2{animation:lr2SortR2V13 .50s cubic-bezier(.28,.04,.55,1) both!important}
+.reveal-card.lr2-sorting-out.swipe-r3{animation:lr2SortR3V13 .50s cubic-bezier(.28,.04,.55,1) both!important}
+.reveal-card.lr2-sorting-out{filter:drop-shadow(0 18px 13px rgba(0,0,0,.62))}
 
 /* The summary should arrive as a perceptible ten-card cascade, not a near-instant paint. */
 @keyframes lr2SummaryCardInV13{
@@ -52,7 +55,7 @@
 
 @media (prefers-reduced-motion:reduce){
   .game-card.holo{transform:none!important;transition:none!important}
-  .pack-summary-v6.lr2-stack-in .lr2-summary-card{animation:none!important;opacity:1!important}
+  .reveal-card.lr2-sorting-out,.pack-summary-v6.lr2-stack-in .lr2-summary-card{animation:none!important;opacity:1!important}
 }
 body.reduce-motion .game-card.holo{transform:none!important;transition:none!important}
-body.reduce-motion .pack-summary-v6.lr2-stack-in .lr2-summary-card{animation:none!important;opacity:1!important}
+body.reduce-motion .reveal-card.lr2-sorting-out,body.reduce-motion .pack-summary-v6.lr2-stack-in .lr2-summary-card{animation:none!important;opacity:1!important}
