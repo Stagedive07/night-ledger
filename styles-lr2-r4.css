@@ -1,0 +1,11 @@
+/* LR2.16r4 targeted UI fixes */
+.lr-r4-crooked-modal{position:relative;max-height:min(92vh,900px)!important;overflow-y:auto!important;overscroll-behavior:contain}
+.lr-r4-crooked-back{position:sticky;top:0;z-index:200;width:100%;margin:-2px 0 10px;background:#10151aeF!important;backdrop-filter:blur(3px)}
+#lr-r4-crooked-card .game-card{touch-action:none!important;user-select:none;-webkit-user-select:none}
+.lr216-reveal-card .reveal-face.reveal-front .game-card.lr-simey-card{transform:rotateY(var(--lr-rotate-x,0deg)) rotateX(var(--lr-rotate-y,0deg)) translateZ(.8px)!important;transform-origin:center!important;will-change:transform}
+.operation-abilities .op-ability-row{grid-template-columns:minmax(100px,1.05fr) minmax(0,.9fr) auto!important;gap:6px!important}
+.operation-abilities .op-ability-row b{min-width:0!important;overflow:visible!important;text-overflow:clip!important;white-space:normal!important;line-height:1.08!important}
+.operation-abilities .op-ability-row span{min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;text-align:right!important}
+.operation-abilities .op-ability-row strong{white-space:nowrap!important;min-width:58px!important}
+.enemy-card.target .meter.gold>i{transition:width .12s linear!important}
+@media (max-width:430px){.operation-abilities .op-ability-row{grid-template-columns:minmax(92px,1fr) minmax(0,.7fr) auto!important}.operation-abilities .op-ability-row span{font-size:10px!important}.operation-abilities .op-ability-row strong{font-size:10px!important;min-width:52px!important}}
