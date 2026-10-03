@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR3.1';
+  const BUILD='LR3.2';
   const AUDIO={
     flipUp:['assets/audio/card-flip-single-up.m4a','assets/audio/card-flip-single-up.ogg'],
     flipDown:['assets/audio/card-flip-single-down.m4a','assets/audio/card-flip-single-down.ogg'],
