@@ -1,0 +1,39 @@
+/* LR2.16 — spring-driven pack reveal. Replaces the remaining keyframed flip. */
+.reveal-stack.lr216-reveal-stack{perspective:680px!important;perspective-origin:50% 45%!important}
+.lr216-flip-inner{
+  transform-style:preserve-3d!important;
+  -webkit-transform-style:preserve-3d!important;
+  transform-origin:center center!important;
+  transform:rotateY(var(--lr-flip-angle,0deg)) rotateX(var(--lr-flip-x,0deg))!important;
+  animation:none!important;
+  will-change:transform;
+}
+.lr216-flip-inner.faceup{transform:rotateY(var(--lr-flip-angle,180deg)) rotateX(var(--lr-flip-x,0deg))!important}
+.lr216-flip-inner.lr2-flip-forward{animation:none!important}
+.reveal-card.lr216-reveal-card.lr2-flipping-up{
+  animation:none!important;
+  translate:0 var(--lr-flip-lift,0px)!important;
+  scale:var(--lr-flip-scale,1)!important;
+  filter:drop-shadow(0 calc(8px + (var(--lr-flip-shadow,0) * 13px)) calc(7px + (var(--lr-flip-shadow,0) * 12px)) rgba(0,0,0,calc(.32 + (var(--lr-flip-shadow,0) * .20))))!important;
+  z-index:90!important;
+}
+.lr216-reveal-card .reveal-face{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  backface-visibility:hidden!important;
+  -webkit-backface-visibility:hidden!important;
+  transform-style:preserve-3d!important;
+  -webkit-transform-style:preserve-3d!important;
+}
+.lr216-reveal-card .reveal-face.reveal-back{transform:rotateY(0deg) translateZ(.2px)!important}
+.lr216-reveal-card .reveal-face.reveal-front{transform:rotateY(180deg) translateZ(.2px)!important}
+.lr216-reveal-card .reveal-face.reveal-front .game-card{transform:translateZ(.8px)}
+.reveal-card.lr216-reveal-card.lr2-flipping-up,
+.lr216-flip-inner.lr2-flip-forward{animation-name:none!important}
+@media (prefers-reduced-motion:reduce){
+  .lr216-flip-inner{transition:none!important}
+  .reveal-card.lr216-reveal-card{translate:0 0!important;scale:1!important}
+}
+body.reduce-motion .lr216-flip-inner{transition:none!important}
