@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR3.10';
+  const BUILD='LR3.15';
   const LR=window.LR216=window.LR216||{libraryFilter:0,librarySort:'rarityDps',librarySearch:'',copyCursor:{},swapTargetUid:null,syndicatePick:false,detailUid:null,packPage:0};
 
   function ensureStore(){
@@ -27,6 +27,7 @@
     if(changed)save();
   }
   function recordPack(tier,pack){
+    if((pack||[]).some(card=>card?.__lrTest))return;
     ensureStore();
     (pack||[]).forEach(card=>addSeen(Number(tier),card.defId));
     save();
@@ -48,7 +49,7 @@
 
   const baseShow=window.showPackOpening;
   if(typeof baseShow==='function')window.showPackOpening=showPackOpening=function(packTier,pack,price,done){
-    recordPack(packTier,pack);
+    if(!(pack||[]).some(card=>card?.__lrTest))recordPack(packTier,pack);
     return baseShow(packTier,pack,price,done);
   };
 
