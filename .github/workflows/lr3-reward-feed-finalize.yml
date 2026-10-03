@@ -1,0 +1,82 @@
+name: LR3 Reward Feed Finalize
+
+on:
+  push:
+    paths:
+      - '.github/workflows/lr3-reward-feed-finalize.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Patch persistent reward feed
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          combat = Path('lr2-combat-v16.js')
+          s = combat.read_text()
+          old = "function showRewardFeed(items,title){if(!items?.length)return;const host=document.querySelector('.lr-reward-feed')||document.querySelector('.enemy-card')||screen;const el=document.createElement('div');el.className='lr-reward-pop';"
+          new = "function rewardFeedHost(){let host=document.getElementById('lr-global-reward-feed');if(host)return host;host=document.createElement('div');host.id='lr-global-reward-feed';host.className='lr-reward-feed lr-global-reward-feed';host.setAttribute('aria-live','polite');document.body.appendChild(host);return host;}\n  function showRewardFeed(items,title){if(!items?.length)return;const host=rewardFeedHost();const el=document.createElement('div');el.className='lr-reward-pop';"
+          if old not in s:
+              raise SystemExit('Expected showRewardFeed source pattern missing')
+          s = s.replace(old, new, 1)
+          s = s.replace("const BUILD='LR2.16';", "const BUILD='LR3.3';", 1)
+          combat.write_text(s)
+
+          css = Path('styles-lr2-fixes-v16.css')
+          c = css.read_text()
+          old_css = ".lr-reward-feed{position:relative;min-height:0;z-index:30}.lr-reward-pop{position:absolute;left:50%;bottom:-5px;transform:translate(-50%,12px);opacity:0;z-index:50;min-width:210px;max-width:92%;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 8px;padding:8px 10px;background:#090d11f2;border:2px solid #46515c;box-shadow:3px 3px 0 #050608;transition:opacity .18s ease,transform .22s ease;pointer-events:none}.lr-reward-pop.show{opacity:1;transform:translate(-50%,0)}"
+          new_css = ".lr-reward-feed{position:relative;min-height:0;z-index:30}.lr-global-reward-feed{position:fixed!important;left:0;right:0;bottom:calc(76px + var(--safe-bottom));height:0;min-height:0!important;z-index:29!important;pointer-events:none}.lr-reward-pop{position:absolute;left:50%;bottom:-5px;transform:translate(-50%,12px);opacity:0;z-index:50;min-width:210px;max-width:92%;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 8px;padding:8px 10px;background:#090d11f2;border:2px solid #46515c;box-shadow:3px 3px 0 #050608;transition:opacity .18s ease,transform .22s ease;pointer-events:none}.lr-reward-pop.show{opacity:1;transform:translate(-50%,0)}.lr-global-reward-feed .lr-reward-pop{bottom:0;max-width:min(92vw,460px);transform:translate(-50%,12px) scale(.96);transform-origin:50% 100%}.lr-global-reward-feed .lr-reward-pop.show{transform:translate(-50%,0) scale(1)}"
+          if old_css not in c:
+              raise SystemExit('Expected reward CSS pattern missing')
+          css.write_text(c.replace(old_css, new_css, 1))
+
+          index = Path('index.html')
+          html = index.read_text()
+          if 'LR3.2' not in html:
+              raise SystemExit('Expected LR3.2 cache marker missing')
+          index.write_text(html.replace('LR3.2', 'LR3.3'))
+          Path('build-version.txt').write_text('LR3.3\n')
+          PY
+
+      - name: Verify item 1 source fix
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s = Path('lr2-combat-v16.js').read_text()
+          c = Path('styles-lr2-fixes-v16.css').read_text()
+          h = Path('index.html').read_text()
+          assert "const BUILD='LR3.3';" in s
+          assert "function rewardFeedHost()" in s
+          assert "document.getElementById('lr-global-reward-feed')" in s
+          assert "const host=rewardFeedHost();" in s
+          assert "document.querySelector('.lr-reward-feed')||document.querySelector('.enemy-card')||screen" not in s
+          assert ".lr-global-reward-feed{position:fixed!important" in c
+          assert "bottom:calc(76px + var(--safe-bottom))" in c
+          assert "z-index:29!important" in c
+          assert ".lr-global-reward-feed .lr-reward-pop.show{transform:translate(-50%,0) scale(1)}" in c
+          assert 'LR3.2' not in h
+          assert 'LR3.3' in h
+          assert Path('build-version.txt').read_text().strip() == 'LR3.3'
+          PY
+
+      - name: Remove one-time workflow and commit
+        shell: bash
+        run: |
+          rm .github/workflows/lr3-reward-feed-finalize.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Fix persistent bottom-nav reward feed in LR3.3"
+          git push
