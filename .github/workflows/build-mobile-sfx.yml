@@ -20,11 +20,27 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/lr-sfx assets/audio
-          base64 -d audio-build/up.b64 > /tmp/lr-sfx/up.ogg
-          base64 -d audio-build/down.b64 > /tmp/lr-sfx/down.ogg
-          cat audio-build/exact-stack-0.b64 audio-build/exact-stack-12.b64 audio-build/exact-stack-34.b64 | base64 -d > /tmp/lr-sfx/stack.ogg
-          cat audio-build/exact-pack-01.b64 audio-build/exact-pack-23.b64 | base64 -d > /tmp/lr-sfx/pack.ogg
-          base64 -d audio-build/exact-coin.b64 > /tmp/lr-sfx/coin.ogg
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64
+
+          root = Path('audio-build')
+          out = Path('/tmp/lr-sfx')
+
+          def decode_parts(dest, parts):
+              data = bytearray()
+              for rel in parts:
+                  text = (root / rel).read_text().strip()
+                  data.extend(base64.b64decode(''.join(text.split()), validate=False))
+              (out / dest).write_bytes(data)
+              print(dest, len(data))
+
+          decode_parts('up.ogg', ['up.b64'])
+          decode_parts('down.ogg', ['down.b64'])
+          decode_parts('stack.ogg', ['exact-stack-0.b64','exact-stack-12.b64','exact-stack-34.b64'])
+          decode_parts('pack.ogg', ['exact-pack-01.b64','exact-pack-23.b64'])
+          decode_parts('coin.ogg', ['exact-coin.b64'])
+          PY
       - name: Convert to mobile AAC/M4A
         shell: bash
         run: |
