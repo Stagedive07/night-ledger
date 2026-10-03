@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR3.8';
+  const BUILD='LR3.11';
   const DEF='t1-c05';
   const ART=`assets/card-art/crooked-tom.webp?v=${BUILD}`;
 
