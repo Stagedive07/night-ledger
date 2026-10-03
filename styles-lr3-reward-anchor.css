@@ -1,0 +1,35 @@
+/* LR3.4 — reward notices grow upward from the top edge of the persistent bottom nav. */
+.bottom-nav{overflow:visible!important}
+.bottom-nav #lr-global-reward-feed{
+  position:absolute!important;
+  left:0!important;
+  right:0!important;
+  top:0!important;
+  bottom:auto!important;
+  width:100%!important;
+  height:0!important;
+  min-height:0!important;
+  z-index:120!important;
+  pointer-events:none!important;
+  overflow:visible!important;
+}
+.bottom-nav #lr-global-reward-feed .lr-reward-pop{
+  left:50%!important;
+  bottom:6px!important;
+  max-width:min(92vw,460px)!important;
+  transform:translate(-50%,0) scale(.90,.76)!important;
+  transform-origin:50% 100%!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  transition:opacity .18s ease,transform .22s cubic-bezier(.2,.8,.2,1)!important;
+}
+.bottom-nav #lr-global-reward-feed .lr-reward-pop.show{
+  opacity:1!important;
+  transform:translate(-50%,0) scale(1,1)!important;
+}
+@media (prefers-reduced-motion:reduce){
+  .bottom-nav #lr-global-reward-feed .lr-reward-pop,
+  .bottom-nav #lr-global-reward-feed .lr-reward-pop.show{transform:translate(-50%,0)!important;transition:opacity .12s linear!important}
+}
+body.reduce-motion .bottom-nav #lr-global-reward-feed .lr-reward-pop,
+body.reduce-motion .bottom-nav #lr-global-reward-feed .lr-reward-pop.show{transform:translate(-50%,0)!important;transition:opacity .12s linear!important}
