@@ -1,5 +1,5 @@
 (() => {
-  const DEF='t1-c05',ART='assets/card-art/crooked-tom.webp',MARK='lr216CrookedTomTestGranted';
+  const DEF='t1-c05',ART='assets/card-art/crooked-tom.webp?v=LR3.11',MARK='lr216CrookedTomTestGranted';
   const baseCardMarkup=window.gameCardMarkup;
   if(typeof baseCardMarkup==='function'){
     window.gameCardMarkup=gameCardMarkup=function(inst,opts={}){
