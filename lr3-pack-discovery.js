@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR3.9';
+  const BUILD='LR3.10';
   const LR=window.LR216=window.LR216||{libraryFilter:0,librarySort:'rarityDps',librarySearch:'',copyCursor:{},swapTargetUid:null,syndicatePick:false,detailUid:null,packPage:0};
 
   function ensureStore(){
