@@ -1,10 +1,7 @@
 (() => {
-  const BUILD='LR2.15';
+  const BUILD='LR2.16';
   window.LR_BUILD=BUILD;
 
-  // New audio system migration: older saves may carry the legacy sound toggle as OFF,
-  // which previously migrated the new SFX slider to 0%. Give the new SFX system one
-  // explicit default of 70%; after this migration, the user's slider choice is preserved.
   try{
     state.settings ||= {};
     if(state.settings.lrAudioMigration !== 2){
@@ -16,7 +13,6 @@
     }
   }catch(e){console.warn('LR audio migration',e);}
 
-  // Make the loaded build obvious in More and give SFX a direct test button.
   const baseRenderSettings=window.renderSettings;
   if(typeof baseRenderSettings==='function'){
     window.renderSettings=function(...args){
@@ -46,11 +42,6 @@
     };
   }
 
-  // Prewarm exact uploaded SFX as soon as possible.
-  window.LR2ExactAudio?.preload?.();
-
-  // Development cache guard. This no-store version file lets an older cached build
-  // detect a newer deployment and reopen the document with a unique query string.
   fetch(`build-version.txt?t=${Date.now()}`,{cache:'no-store'})
     .then(r=>r.ok?r.text():BUILD)
     .then(v=>{
@@ -64,6 +55,5 @@
       }
     }).catch(()=>{});
 
-  // Re-render once so the migration/build stamp is immediately reflected.
   try{render();}catch(e){}
 })();
