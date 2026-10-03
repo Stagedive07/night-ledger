@@ -1,8 +1,8 @@
 const GD = window.GameData;
 const SD = window.StoryData;
-const SAVE_KEY = 'night-ledger-prototype-v1';
 const SAVE_VERSION = 1;
 const TESTER_MODE = new URLSearchParams(location.search).get('tester') === '1';
+const SAVE_KEY = TESTER_MODE ? 'night-ledger-prototype-v1-tester' : 'night-ledger-prototype-v1';
 let storageMode = 'local';
 let memorySave = null;
 function storageGet(key){try{return window.localStorage.getItem(key)}catch(e){storageMode='memory';console.warn('Local storage unavailable; using session memory fallback.',e);return memorySave}}
