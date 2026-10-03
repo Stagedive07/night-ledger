@@ -1,0 +1,40 @@
+name: Build stack SFX
+on:
+  push:
+    paths:
+      - 'audio-build/stack-ready.txt'
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Reconstruct stack OGG
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64
+          parts=['audio-build/exact-stack-0.b64','audio-build/exact-stack-12.b64','audio-build/exact-stack-34.b64']
+          s=''.join(Path(p).read_text() for p in parts)
+          s=''.join(s.split()).rstrip('=')
+          s += '=' * (-len(s) % 4)
+          data=base64.b64decode(s, validate=False)
+          Path('/tmp/stack.ogg').write_bytes(data)
+          print('decoded',len(data),'bytes')
+          PY
+          ffprobe -v error -show_entries format=format_name,duration -of default=nw=1 /tmp/stack.ogg
+      - name: Convert stack to M4A
+        run: ffmpeg -y -hide_banner -loglevel error -i /tmp/stack.ogg -c:a aac -b:a 128k assets/audio/card-flip-10-stack.m4a
+      - name: Commit stack M4A
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/audio/card-flip-10-stack.m4a
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Add native 10-card stack SFX'
+          git pull --rebase origin main
+          git push
