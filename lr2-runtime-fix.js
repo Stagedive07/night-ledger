@@ -4,11 +4,14 @@
 
   try{
     state.settings ||= {};
-    if(state.settings.lrAudioMigration !== 2){
-      state.settings.soundVolume=.70;
-      state.settings.sound=true;
-      if(typeof state.settings.musicVolume!=='number') state.settings.musicVolume=0;
-      state.settings.lrAudioMigration=2;
+    if(state.settings.lrAudioMigration !== 3){
+      if(typeof state.settings.soundVolume!=='number' || state.settings.lrAudioMigration<2) state.settings.soundVolume=.70;
+      state.settings.sound=state.settings.soundVolume>0;
+      // Music was introduced after older saves defaulted to an implicit OFF state.
+      // Give the new music system an audible baseline once; the slider remains authoritative afterward.
+      if(state.settings.lrAudioMigration !==3 && (!Number.isFinite(state.settings.musicVolume) || state.settings.musicVolume===0)) state.settings.musicVolume=.35;
+      state.settings.music=state.settings.musicVolume>0;
+      state.settings.lrAudioMigration=3;
       save();
     }
   }catch(e){console.warn('LR audio migration',e);}
