@@ -1,11 +1,11 @@
 (() => {
-  const BUILD='LR3.2';
+  const BUILD='LR3.5';
   const AUDIO={
     flipUp:['assets/audio/card-flip-single-up.m4a','assets/audio/card-flip-single-up.ogg'],
     flipDown:['assets/audio/card-flip-single-down.m4a','assets/audio/card-flip-single-down.ogg'],
     stack:['assets/audio/card-flip-10-stack.m4a','assets/audio/card-flip-10-stack.ogg'],
     packOpen:['assets/audio/full-pack-opening.m4a','assets/audio/full-pack-opening.ogg'],
-    coin:['assets/audio/coin.m4a','assets/audio/coin.ogg']
+    coin:['assets/audio/coin.m4a?v=LR3.5','assets/audio/coin.ogg']
   };
   const preloaded=new Map();
   const clamp01=n=>Math.max(0,Math.min(1,Number(n)||0));
