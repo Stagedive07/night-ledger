@@ -1,0 +1,98 @@
+name: LR3 SFX Finalize
+
+on:
+  push:
+    paths:
+      - '.github/workflows/lr3-sfx-finalize.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct optimized M4As
+        shell: bash
+        run: |
+          cat audio-build/lr3/pack.*.b64 | base64 -d > assets/audio/full-pack-opening.m4a
+          cat audio-build/lr3/stack.*.b64 | base64 -d > assets/audio/card-flip-10-stack.m4a
+          test "$(wc -c < assets/audio/full-pack-opening.m4a)" -eq 22290
+          test "$(wc -c < assets/audio/card-flip-10-stack.m4a)" -eq 43426
+
+      - name: Patch exact SFX triggers and build marker
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('lr2-pack-v16.js')
+          s = p.read_text()
+
+          replacements = [
+              ("const BUILD='LR2.16';", "const BUILD='LR3.1';"),
+              ("if(kind==='stack'||kind==='place')return playSfx('stack');", "if(kind==='stack')return playSfx('stack');if(kind==='place')return playSfx('flipDown');"),
+              ("const t=GD.tierData(packTier),back=window.LRV6?.BACK||'assets/card-art/street-deck-back.png';playSfx('packOpen');modalRoot.innerHTML=", "const t=GD.tierData(packTier),back=window.LRV6?.BACK||'assets/card-art/street-deck-back.png';modalRoot.innerHTML="),
+              ("cover.dataset.opening='1';cover.classList.add('shake');", "cover.dataset.opening='1';playSfx('packOpen');cover.classList.add('shake');"),
+          ]
+          for old, new in replacements:
+              if old not in s:
+                  raise SystemExit(f'Expected source pattern missing: {old}')
+              s = s.replace(old, new, 1)
+
+          p.write_text(s)
+
+          index = Path('index.html')
+          html = index.read_text()
+          if 'LR2.16r7' not in html:
+              raise SystemExit('Expected LR2.16r7 cache marker missing')
+          index.write_text(html.replace('LR2.16r7', 'LR3.1'))
+          Path('build-version.txt').write_text('LR3.1\n')
+          PY
+
+      - name: Verify mappings
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s = Path('lr2-pack-v16.js').read_text()
+          assert "const BUILD='LR3.1';" in s
+          assert "stack:['assets/audio/card-flip-10-stack.m4a'" in s
+          assert "packOpen:['assets/audio/full-pack-opening.m4a'" in s
+          assert "flipUp:['assets/audio/card-flip-single-up.m4a'" in s
+          assert "flipDown:['assets/audio/card-flip-single-down.m4a'" in s
+          assert "coin:['assets/audio/coin.m4a'" in s
+          assert "if(kind==='stack')return playSfx('stack');" in s
+          assert "if(kind==='place')return playSfx('flipDown');" in s
+          assert "if(kind==='stack'||kind==='place')" not in s
+          opening = s[s.index('window.showPackOpening='):s.index('window.startReveal=')]
+          before_click, after_click = opening.split("cover.onclick=", 1)
+          assert "playSfx('packOpen')" not in before_click
+          assert "cover.dataset.opening='1';playSfx('packOpen');cover.classList.add('shake');" in after_click
+          reveal = s[s.index('window.startReveal='):]
+          assert "if(withSound)playSfx('stack')" in reveal
+          assert "if(index>=pack.length){renderSummary(true);return;}" in reveal
+          assert "playSfx('flipUp')" in reveal
+          assert "playSfx('flipDown')" in reveal
+          assert "playSfx('coin')" in s
+          html = Path('index.html').read_text()
+          assert 'LR2.16r7' not in html
+          assert 'LR3.1' in html
+          assert Path('build-version.txt').read_text().strip() == 'LR3.1'
+          PY
+
+      - name: Remove temporary LR3 transport and commit
+        shell: bash
+        run: |
+          rm -rf audio-build/lr3
+          rm .github/workflows/lr3-sfx-finalize.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Finalize LR3.1 optimized SFX"
+          git push
