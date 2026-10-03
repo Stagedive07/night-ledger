@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR2.16r7';
+  const BUILD='LR3.2';
   const playSfx=kind=>window.LR2PackV16?.playSfx?.(kind);
 
   function springValue(from,to,{stiffness=.066,damping=.25,precision=.025,maxMs=1400,onFrame}={}){
