@@ -1,30 +1,35 @@
-/* LR3.18 — pack reveal rebuilt as one stable card surface.
-   No mirrored dual-face DOM: the back flips to edge, swaps to the real shared game-card,
-   then finishes the turn. This avoids mobile backface bugs and keeps Library/test card behavior. */
+/* LR3.19 — pack reveal rebuilt as one stable card surface.
+   The reveal shell is now visually transparent: all visible framing belongs to the moving card itself.
+   Back and front share the exact 2:3 outer box and the back receives the same inset border footprint. */
 .game-card.lr-simey-card{transform:perspective(600px) rotateY(calc(0deg - var(--lr-rotate-x,0deg))) rotateX(calc(0deg - var(--lr-rotate-y,0deg))) translateZ(.01px)!important}
 
 /* Use the full-resolution back everywhere the pack flow touches it. */
-.pack-cover{background-image:url('assets/card-art/street-deck-back.webp?v=LR3.18')!important;background-size:100% 100%!important;background-position:center!important;background-repeat:no-repeat!important;image-rendering:auto!important}
+.pack-cover{background-image:url('assets/card-art/street-deck-back.webp?v=LR3.19')!important;background-size:100% 100%!important;background-position:center!important;background-repeat:no-repeat!important;image-rendering:auto!important}
 .pack-cover img{image-rendering:auto!important}
 
 .lr318-reveal-stack{perspective:none!important;overflow:hidden!important;isolation:isolate}
 .lr318-card,.lr318-stack-back{
   position:absolute!important;
   left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;
-  width:min(290px,72vw,calc(68dvh * .68))!important;
-  height:auto!important;aspect-ratio:.68!important;
+  width:min(290px,72vw,calc(68dvh * .666667))!important;
+  height:auto!important;aspect-ratio:2/3!important;
   margin:0!important;padding:0!important;
   border:0!important;border-radius:2px!important;
-  background:#081018!important;
-  box-shadow:8px 9px 0 #000,0 0 0 3px #59636d!important;
+  background:transparent!important;
+  box-shadow:none!important;
   overflow:visible!important;
   user-select:none!important;-webkit-user-select:none!important;
   -webkit-touch-callout:none!important;
 }
-.lr318-stack-back{pointer-events:none;overflow:hidden!important;z-index:10}
+.lr318-stack-back{
+  pointer-events:none;overflow:hidden!important;z-index:10;
+  border:3px solid #4b5561!important;
+  background:#081018!important;
+  box-shadow:4px 4px 0 #050608!important;
+}
 .lr318-stack-back img,.lr318-back-surface>img{
   display:block!important;width:100%!important;height:100%!important;
-  object-fit:cover!important;image-rendering:auto!important;
+  object-fit:fill!important;image-rendering:auto!important;
   pointer-events:none!important;user-select:none!important;-webkit-user-drag:none!important;
 }
 .lr318-stack-back[data-depth="1"]{transform:translate(calc(-50% + 10px),calc(-50% + 13px)) rotate(1.5deg) scale(.975)!important;z-index:13}
@@ -47,13 +52,17 @@
   width:100%!important;height:100%!important;
   margin:0!important;padding:0!important;
   border:0!important;border-radius:2px!important;
-  background:#081018!important;
+  background:transparent!important;
   overflow:visible!important;
   transform-origin:50% 50%!important;
   will-change:transform!important;
-  filter:drop-shadow(0 7px 7px rgba(0,0,0,.35));
 }
-.lr318-back-surface{overflow:hidden!important}
+.lr318-back-surface{
+  overflow:hidden!important;
+  border:3px solid #4b5561!important;
+  background:#081018!important;
+  box-shadow:4px 4px 0 #050608!important;
+}
 .lr318-front-surface>.game-card{
   width:100%!important;height:100%!important;max-width:none!important;
   margin:0!important;transform-origin:center!important;
@@ -65,7 +74,7 @@
 .lr318-reveal-stack .reveal-hint{position:absolute!important;bottom:13px!important;left:50%!important;transform:translateX(-50%)!important;z-index:90!important;width:max-content!important;max-width:92%!important;text-align:center!important}
 
 @media(max-height:680px){
-  .lr318-card,.lr318-stack-back{width:min(250px,68vw,calc(62dvh * .68))!important}
+  .lr318-card,.lr318-stack-back{width:min(250px,68vw,calc(62dvh * .666667))!important}
 }
 @media(prefers-reduced-motion:reduce){.lr318-card{transition:none!important}.lr318-surface{will-change:auto!important}}
 body.reduce-motion .lr318-card{transition:none!important}
