@@ -1,0 +1,37 @@
+/* LR3.11 — Crooked Tom holo test gets a full mobile testing surface. */
+.lr216-crooked-modal{
+  width:min(94vw,720px)!important;
+  height:min(92dvh,920px)!important;
+  max-width:none!important;
+  max-height:none!important;
+  padding:14px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:visible!important;
+}
+.lr216-crooked-modal>.kicker,.lr216-crooked-modal>h2,.lr216-crooked-modal>p,.lr216-crooked-modal>.btn-row{flex:0 0 auto}
+.lr216-crooked-modal .lr216-reveal-stack{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  width:100%!important;
+  display:grid!important;
+  place-items:center!important;
+  overflow:visible!important;
+  perspective:900px!important;
+}
+.lr216-crooked-modal .lr216-reveal-card{
+  position:relative!important;
+  inset:auto!important;
+  width:min(72vw,380px)!important;
+  height:auto!important;
+  aspect-ratio:5/7!important;
+  margin:auto!important;
+}
+.lr216-crooked-modal .lr216-flip-inner,.lr216-crooked-modal .reveal-face{width:100%!important;height:100%!important}
+.lr216-crooked-modal .btn-row{margin-top:10px!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+.lr216-crooked-modal .btn-row .btn{min-width:0!important}
+@media(max-height:700px){
+  .lr216-crooked-modal{height:94dvh!important;padding:10px!important}
+  .lr216-crooked-modal .lr216-reveal-card{width:min(56vw,280px)!important}
+  .lr216-crooked-modal>p{margin:3px 0!important}
+}
