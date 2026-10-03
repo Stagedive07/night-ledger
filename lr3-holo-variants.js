@@ -74,5 +74,13 @@
   mo.observe(document.body,{childList:true,subtree:true});
   requestAnimationFrame(()=>scan(document));
 
+  const baseSettings=window.renderSettings;
+  if(typeof baseSettings==='function')renderSettings=window.renderSettings=function(){
+    const out=baseSettings.apply(this,arguments);
+    const stamp=document.getElementById('lr-build-stamp');
+    if(stamp){const target=stamp.querySelector('span')||stamp;target.textContent=BUILD;}
+    return out;
+  };
+
   window.LR3HoloVariants={build:BUILD,styles:[...STYLES],ensureHoloStyle,scan};
 })();
