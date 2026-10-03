@@ -28,11 +28,11 @@ jobs:
               print(out, len(data), 'bytes')
 
           decode(
-              ['audio-build/exact-stack-0.b64','audio-build/exact-stack-12.b64','audio-build/exact-stack-34.b64'],
+              ['audio-build/lr316-stack-0a.b64','audio-build/lr316-stack-0b.b64','audio-build/lr316-stack-1.b64','audio-build/lr316-stack-2.b64','audio-build/lr316-stack-3.b64','audio-build/lr316-stack-4.b64','audio-build/lr316-stack-5.b64'],
               'assets/audio/card-flip-10-stack.ogg'
           )
           decode(
-              ['audio-build/menu-click.b64'],
+              ['audio-build/lr316-menu-0a.b64','audio-build/lr316-menu-0b.b64','audio-build/lr316-menu-1.b64'],
               'assets/audio/menu-click.ogg'
           )
           PY
