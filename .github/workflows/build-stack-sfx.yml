@@ -28,7 +28,7 @@ jobs:
               print(out, len(data), 'bytes')
 
           decode(
-              ['audio-build/lr316-stack-0a.b64','audio-build/lr316-stack-0b.b64','audio-build/lr316-stack-1.b64','audio-build/lr316-stack-2.b64','audio-build/lr316-stack-3.b64','audio-build/lr316-stack-4.b64','audio-build/lr316-stack-5.b64'],
+              ['audio-build/lr316-stack-0a.b64','audio-build/lr316-stack-0b.b64','audio-build/lr316-stack-1.b64','audio-build/lr316-stack-2a.b64','audio-build/lr316-stack-2b.b64','audio-build/lr316-stack-2c.b64','audio-build/lr316-stack-2d.b64','audio-build/lr316-stack-3.b64','audio-build/lr316-stack-4.b64','audio-build/lr316-stack-5.b64'],
               'assets/audio/card-flip-10-stack.ogg'
           )
           decode(
