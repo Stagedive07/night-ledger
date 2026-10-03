@@ -1,0 +1,50 @@
+/* LR3.13 — keep holo readable at every tilt and make cards drag-first on touch. */
+
+/*
+  The previous pass removed the black falloff, but screen-blended foil could still
+  climb to roughly 40–50% opacity at the edge of the tilt range. Cap the moving
+  foil much lower so the artwork is always the dominant layer.
+*/
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-shine{
+  opacity:calc(.045 + (var(--lr-card-opacity,0) * .115))!important;
+}
+.game-card.holo[data-holo-style]:not([data-holo-style="galaxy"]) .lr-simey-foil{
+  opacity:calc(.04 + (var(--lr-card-opacity,0) * .12))!important;
+}
+
+/* Glare is only a small moving highlight now, never a solid wash. */
+.game-card.holo[data-holo-style] .lr-simey-glare{
+  opacity:calc(.004 + (var(--lr-card-opacity,0) * .036))!important;
+  background:radial-gradient(
+    farthest-corner circle at var(--lr-pointer-x) var(--lr-pointer-y),
+    rgba(255,255,255,.24) 0%,
+    rgba(220,245,255,.07) 16%,
+    rgba(255,255,255,.015) 32%,
+    transparent 56%
+  )!important;
+  filter:none!important;
+  mix-blend-mode:soft-light!important;
+}
+
+/* Keep the Galaxy helper layers from rebuilding a bright white hotspot. */
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-shine::before{
+  opacity:.08!important;
+}
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-shine::after{
+  opacity:.10!important;
+}
+
+/*
+  Cards are physical drag/tilt surfaces. iOS text selection/callout interferes
+  with holding and moving them, so card contents are deliberately non-selectable.
+*/
+.game-card,
+.game-card *{
+  -webkit-user-select:none!important;
+  user-select:none!important;
+  -webkit-touch-callout:none!important;
+}
+.game-card img{
+  -webkit-user-drag:none!important;
+  user-drag:none!important;
+}
