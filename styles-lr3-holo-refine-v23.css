@@ -1,0 +1,126 @@
+/* LR3.23 — holo refinement.
+   - Galaxy/Cosmos uses Matt's supplied texture on the FULL card foil layer (not just the art window).
+   - Amazing Rare follows Simey's 25% glitter scale instead of the oversized ~90% texture.
+   - VMAX uses two 25% glitter passes plus much finer rainbow/facet fields.
+   - Static + interaction opacities avoid unsupported CSS multiplication and stay below ~30%.
+*/
+:root{
+  --lr23-galaxy:url("assets/holo/galaxy-texture.svg?v=LR3.23");
+  --lr23-glitter:url("https://www.publicdomainpictures.net/pictures/500000/velka/glitzer-folie-textur-hintergrund-1678453791iyh.jpg");
+}
+.game-card.holo[data-holo-style] .lr-simey-shine,
+.game-card.holo[data-holo-style] .lr-simey-foil,
+.game-card.holo[data-holo-style] .lr-simey-glare{
+  pointer-events:none!important;
+}
+
+/* GALAXY / COSMOS
+   Full-card texture so it is unmistakably present. The old art-window-only galaxy layer is disabled. */
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-shine{
+  opacity:0!important;
+}
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-foil{
+  opacity:.15!important;
+  background-image:
+    var(--lr23-galaxy),
+    repeating-linear-gradient(
+      82deg,
+      rgba(255,220,105,.46) 0 4%,
+      rgba(130,225,120,.42) 4% 8%,
+      rgba(95,220,215,.42) 8% 12%,
+      rgba(105,145,245,.44) 12% 16%,
+      rgba(200,100,245,.46) 16% 20%,
+      rgba(245,95,175,.44) 20% 24%
+    ),
+    radial-gradient(circle at var(--lr-pointer-x) var(--lr-pointer-y),rgba(255,255,255,.28),transparent 42%)!important;
+  background-size:cover,400% 900%,cover!important;
+  background-position:center,var(--lr-background-x) var(--lr-background-y),center!important;
+  background-repeat:no-repeat!important;
+  background-blend-mode:soft-light,screen,screen!important;
+  filter:brightness(1.02) contrast(1.04) saturate(1.05)!important;
+  mix-blend-mode:screen!important;
+}
+.game-card.holo[data-holo-style="galaxy"].lr-simey-interacting .lr-simey-foil{
+  opacity:.27!important;
+}
+
+/* AMAZING RARE
+   Simey's reference uses TWO glitter layers at 25% size. The previous pass used ~92%, which made the foil chunks enormous. */
+.game-card.holo[data-holo-style="amazing"] .lr-simey-foil{
+  opacity:.12!important;
+  background-image:
+    var(--lr23-glitter),
+    var(--lr23-glitter),
+    radial-gradient(
+      farthest-corner circle at var(--lr-pointer-x) var(--lr-pointer-y),
+      rgba(20,32,27,.72) 8%,
+      rgba(215,235,232,.12) 48%,
+      rgba(255,255,255,.68) 92%
+    )!important;
+  background-size:25% 25%,25% 25%,cover!important;
+  background-position:40% 45%,55% 55%,center!important;
+  background-repeat:repeat,repeat,no-repeat!important;
+  background-blend-mode:soft-light,color-burn,screen!important;
+  filter:brightness(1) contrast(1.04) saturate(.92)!important;
+  mix-blend-mode:screen!important;
+}
+.game-card.holo[data-holo-style="amazing"].lr-simey-interacting .lr-simey-foil{
+  opacity:.24!important;
+}
+
+/* VMAX / RAINBOW
+   Two fine 25% glitter passes, then Simey-like large moving rainbow/facet fields.
+   Glitter itself stays small; the broad color movement comes from gradients rather than giant foil blobs. */
+.game-card.holo[data-holo-style="vmax"] .lr-simey-foil{
+  opacity:.12!important;
+  background-image:
+    var(--lr23-glitter),
+    var(--lr23-glitter),
+    repeating-linear-gradient(
+      -33deg,
+      rgba(205,55,50,.58) 0 6%,
+      rgba(135,155,225,.54) 6% 12%,
+      rgba(65,175,165,.52) 12% 18%,
+      rgba(65,175,80,.52) 18% 24%,
+      rgba(185,85,225,.56) 24% 30%,
+      rgba(205,55,50,.58) 30% 36%
+    ),
+    repeating-linear-gradient(
+      133deg,
+      rgba(20,28,52,.34) 0 2.5%,
+      rgba(150,165,165,.24) 2.5% 5%,
+      rgba(115,150,85,.22) 5% 7.5%,
+      rgba(150,165,165,.24) 7.5% 10%,
+      rgba(20,28,52,.34) 10% 15%
+    ),
+    radial-gradient(
+      farthest-corner circle at var(--lr-pointer-x) var(--lr-pointer-y),
+      rgba(95,215,245,.32) 0%,
+      rgba(105,225,155,.28) 25%,
+      rgba(180,115,230,.28) 50%,
+      rgba(235,115,135,.26) 75%,
+      transparent 100%
+    )!important;
+  background-size:25% 25%,25% 25%,1100% 1100%,600% 600%,200% 200%!important;
+  background-position:40% 45%,55% 55%,var(--lr-background-x) var(--lr-background-y),var(--lr-background-x) var(--lr-background-y),var(--lr-background-x) var(--lr-background-y)!important;
+  background-repeat:repeat,repeat,no-repeat,no-repeat,no-repeat!important;
+  background-blend-mode:soft-light,overlay,screen,soft-light,screen!important;
+  filter:brightness(.98) contrast(1.06) saturate(1.08)!important;
+  mix-blend-mode:screen!important;
+}
+.game-card.holo[data-holo-style="vmax"].lr-simey-interacting .lr-simey-foil{
+  opacity:.24!important;
+}
+
+/* Keep glare subtle across these three so the art never gets washed out. */
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-glare,
+.game-card.holo[data-holo-style="amazing"] .lr-simey-glare,
+.game-card.holo[data-holo-style="vmax"] .lr-simey-glare{
+  opacity:.025!important;
+  mix-blend-mode:screen!important;
+}
+.game-card.holo[data-holo-style="galaxy"].lr-simey-interacting .lr-simey-glare,
+.game-card.holo[data-holo-style="amazing"].lr-simey-interacting .lr-simey-glare,
+.game-card.holo[data-holo-style="vmax"].lr-simey-interacting .lr-simey-glare{
+  opacity:.055!important;
+}
