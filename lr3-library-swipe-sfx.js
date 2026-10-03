@@ -1,11 +1,12 @@
 (() => {
-  const BUILD='LR3.7';
+  const BUILD='LR3.10';
   const audio=window.LR2PackV16;
   if(!audio?.playSfx)return;
   const basePlay=audio.playSfx.bind(audio);
   let pendingLibrarySwipe=false,nextSound='flipUp',startShell=null,startX=0,startY=0;
 
-  audio.playSfx=function(kind){
+  function externalPlay(kind){
+    if(kind==='stack')return basePlay('flipDown');
     if(pendingLibrarySwipe&&(kind==='flipUp'||kind==='flipDown')){
       pendingLibrarySwipe=false;
       const chosen=nextSound;
@@ -13,6 +14,13 @@
       return basePlay(chosen);
     }
     return basePlay(kind);
+  }
+  audio.playSfx=externalPlay;
+  window.lr2PlayExactSfx=externalPlay;
+  const baseUiSound=window.playUISoundV5;
+  if(typeof baseUiSound==='function')window.playUISoundV5=function(kind='select'){
+    if(kind==='stack')return basePlay('flipDown');
+    return baseUiSound(kind);
   };
 
   document.addEventListener('touchstart',e=>{
