@@ -1,0 +1,30 @@
+/* LR2.16r7 — pack reveal rebuilt around Simey's spring-driven 3D card surface. */
+.lr7-reveal-stack{perspective:600px!important;perspective-origin:50% 43%!important}
+.lr7-reveal-card{
+  transform:translate3d(calc(var(--stack-x,0px) + var(--lr7-exit-x,0px)),calc(var(--stack-y,0px) + var(--lr7-exit-y,0px)),0) rotate(calc(var(--stack-r,0deg) + var(--lr7-exit-r,0deg))) scale(var(--stack-s,1))!important;
+  transform-style:preserve-3d!important;-webkit-transform-style:preserve-3d!important;
+  will-change:transform,opacity;
+}
+.lr7-reveal-card.lr7-interacting{z-index:120!important}
+.lr7-translater{
+  width:100%;height:100%;display:grid;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;
+  transform:translate3d(0,0,var(--lr7-z,0px)) scale(var(--lr7-scale,1));
+  transform-origin:center;will-change:transform;
+}
+.lr7-rotator{
+  width:100%;height:100%;display:grid;grid-template:1fr/1fr;
+  transform-style:preserve-3d;-webkit-transform-style:preserve-3d;
+  transform:rotateY(var(--lr7-turn,180deg)) rotateX(0deg);
+  transform-origin:center;will-change:transform,box-shadow;
+  border-radius:inherit;
+  box-shadow:0 10px 20px -8px rgba(0,0,0,.64),0 2px 15px -8px rgba(0,0,0,.65);
+}
+.lr7-face{grid-area:1/1;position:relative!important;inset:auto!important;width:100%!important;height:100%!important;backface-visibility:hidden!important;-webkit-backface-visibility:hidden!important;transform-style:preserve-3d!important;-webkit-transform-style:preserve-3d!important;overflow:hidden;border-radius:inherit}
+.lr7-front{transform:translate3d(0,0,.01px)!important}
+.lr7-back{transform:rotateY(180deg) translateZ(1px)!important;background:#08131b;display:grid;place-items:center}
+.lr7-back img{width:100%;height:100%;object-fit:cover;display:block}
+.lr7-front .game-card{width:100%!important;height:100%!important;transform:translateZ(.6px);border-color:var(--pack-accent)!important}
+/* Explicitly disable every older reveal animation so only the r7 surface moves. */
+.lr7-reveal-card,.lr7-reveal-card .flip-inner,.lr7-reveal-card.lr2-flipping-up{animation:none!important;translate:none!important;filter:none!important}
+@media (prefers-reduced-motion:reduce){.lr7-translater,.lr7-rotator,.lr7-reveal-card{transition:none!important}}
+body.reduce-motion .lr7-translater,body.reduce-motion .lr7-rotator{transition:none!important}
