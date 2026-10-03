@@ -1,0 +1,16 @@
+/* LR3.15 — isolated tester surfaces for holo variants and pack-opening previews. */
+.lr3-test-lab{margin-top:14px;padding-top:12px;border-top:1px solid #2b3239}
+.lr3-test-section+.lr3-test-section{margin-top:14px}
+.lr3-test-section .kicker{margin-bottom:7px}
+.lr3-holo-test-modal{width:min(94vw,620px)!important;max-width:620px!important}
+.lr3-holo-test-card{width:min(72vw,360px);margin:12px auto 14px;perspective:900px}
+.lr3-holo-test-card>.game-card{width:100%;height:auto;aspect-ratio:5/7}
+.lr3-holo-test-switcher{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 12px}
+.lr3-holo-test-switcher .mini-btn.on{outline:1px solid currentColor}
+.lr3-test-pack .pack-equip-v6,.lr3-test-pack .pack-delta{display:none!important}
+.lr3-test-pack-modal{position:relative}
+.lr3-test-pack-badge{position:absolute;left:10px;right:10px;top:8px;z-index:80;text-align:center;font-size:10px;letter-spacing:.08em;pointer-events:none}
+@media(max-width:520px){
+  .lr3-holo-test-card{width:min(78vw,340px)}
+  .lr3-holo-test-switcher{grid-template-columns:1fr}
+}
