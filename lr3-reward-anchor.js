@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR3.4';
+  const BUILD='LR3.5';
 
   function navHost(){return document.querySelector('.bottom-nav');}
   function anchorRewardFeed(){
