@@ -1,37 +1,56 @@
-/* LR3.13 — keep holo readable at every tilt and make cards drag-first on touch. */
+/* LR3.14 — 30% holo intensity, no dark-side falloff, drag-first touch. */
 
 /*
-  The previous pass removed the black falloff, but screen-blended foil could still
-  climb to roughly 40–50% opacity at the edge of the tilt range. Cap the moving
-  foil much lower so the artwork is always the dominant layer.
+  The foil can reach 30% at full interaction, but never uses a blend mode that
+  can subtract/darken the card art. This keeps the Simey-style color movement
+  while preserving the underlying illustration at every tilt angle.
 */
 .game-card.holo[data-holo-style="galaxy"] .lr-simey-shine{
-  opacity:calc(.045 + (var(--lr-card-opacity,0) * .115))!important;
+  opacity:calc(.06 + (var(--lr-card-opacity,0) * .24))!important;
+  mix-blend-mode:screen!important;
+  background-blend-mode:screen!important;
+  background-color:transparent!important;
 }
 .game-card.holo[data-holo-style]:not([data-holo-style="galaxy"]) .lr-simey-foil{
-  opacity:calc(.04 + (var(--lr-card-opacity,0) * .12))!important;
+  opacity:calc(.06 + (var(--lr-card-opacity,0) * .24))!important;
+  mix-blend-mode:screen!important;
+  background-blend-mode:screen!important;
+  background-color:transparent!important;
 }
 
-/* Glare is only a small moving highlight now, never a solid wash. */
+/*
+  Keep the moving glare separate from foil intensity. It is intentionally small
+  and soft so touching an edge cannot turn the opposite side black or wash the
+  artwork into a solid color.
+*/
 .game-card.holo[data-holo-style] .lr-simey-glare{
-  opacity:calc(.004 + (var(--lr-card-opacity,0) * .036))!important;
+  opacity:calc(.008 + (var(--lr-card-opacity,0) * .052))!important;
   background:radial-gradient(
     farthest-corner circle at var(--lr-pointer-x) var(--lr-pointer-y),
-    rgba(255,255,255,.24) 0%,
-    rgba(220,245,255,.07) 16%,
-    rgba(255,255,255,.015) 32%,
-    transparent 56%
+    rgba(255,255,255,.28) 0%,
+    rgba(220,245,255,.08) 14%,
+    rgba(255,255,255,.018) 28%,
+    transparent 50%
   )!important;
   filter:none!important;
-  mix-blend-mode:soft-light!important;
+  mix-blend-mode:screen!important;
+  background-blend-mode:screen!important;
 }
 
-/* Keep the Galaxy helper layers from rebuilding a bright white hotspot. */
+/* Galaxy helper layers may brighten, but may never burn/darken the image. */
 .game-card.holo[data-holo-style="galaxy"] .lr-simey-shine::before{
-  opacity:.08!important;
+  opacity:.10!important;
+  mix-blend-mode:screen!important;
 }
 .game-card.holo[data-holo-style="galaxy"] .lr-simey-shine::after{
-  opacity:.10!important;
+  opacity:.12!important;
+  mix-blend-mode:screen!important;
+}
+
+/* Force every variant's generated foil helpers into additive compositing. */
+.game-card.holo[data-holo-style] .lr-simey-foil::before,
+.game-card.holo[data-holo-style] .lr-simey-foil::after{
+  mix-blend-mode:screen!important;
 }
 
 /*
