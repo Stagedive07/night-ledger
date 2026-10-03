@@ -1,0 +1,200 @@
+/* LR3.12 — restrained six-style holo system.
+   Keeps the foil readable without blacking out the far side of the card. */
+
+.game-card.holo[data-holo-style]{
+  --lr-foil-alpha:calc(.08 + (var(--lr-card-opacity,0) * .42));
+}
+.game-card.holo[data-holo-style] .lr-simey-shine,
+.game-card.holo[data-holo-style] .lr-simey-foil,
+.game-card.holo[data-holo-style] .lr-simey-glare{
+  transition:opacity .18s ease;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+.lr-simey-foil{
+  position:absolute!important;
+  inset:0!important;
+  z-index:28!important;
+  display:block!important;
+  border-radius:inherit;
+  overflow:hidden;
+  pointer-events:none!important;
+  opacity:0;
+  transform:none!important;
+}
+.lr-simey-foil::before,.lr-simey-foil::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+/* Shared glare: highlight only. Never darkens the opposite side. */
+.game-card.holo[data-holo-style] .lr-simey-glare{
+  background:radial-gradient(
+    farthest-corner circle at var(--lr-pointer-x) var(--lr-pointer-y),
+    rgba(255,255,255,.48) 0%,
+    rgba(220,245,255,.18) 18%,
+    rgba(255,255,255,.04) 38%,
+    transparent 68%
+  )!important;
+  opacity:calc(.025 + (var(--lr-card-opacity,0) * .18))!important;
+  filter:none!important;
+  mix-blend-mode:screen!important;
+  transform:none!important;
+}
+
+/* GALAXY / COSMOS */
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-foil{opacity:0!important}
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-shine{
+  opacity:calc(.12 + (var(--lr-card-opacity,0) * .34))!important;
+  background-image:
+    radial-gradient(circle at 14% 22%,rgba(255,255,255,.72) 0 .55%,transparent .9%),
+    radial-gradient(circle at 72% 18%,rgba(210,245,255,.68) 0 .5%,transparent .85%),
+    radial-gradient(circle at 38% 71%,rgba(255,232,190,.65) 0 .6%,transparent 1%),
+    radial-gradient(circle at 83% 62%,rgba(255,255,255,.64) 0 .45%,transparent .82%),
+    repeating-linear-gradient(82deg,rgba(218,56,50,.72) 0 8%,rgba(219,204,86,.72) 16%,rgba(121,199,58,.72) 24%,rgba(58,192,183,.72) 32%,rgba(71,98,207,.72) 40%,rgba(170,69,209,.72) 48%,rgba(218,56,50,.72) 56%),
+    radial-gradient(farthest-corner circle at var(--lr-pointer-x) var(--lr-pointer-y),rgba(255,255,255,.34) 4%,rgba(180,205,220,.08) 36%,transparent 74%);
+  background-size:43px 43px,67px 67px,79px 79px,101px 101px,600% 1200%,cover;
+  background-position:
+    calc(var(--lr-background-x) * .25) calc(var(--lr-background-y) * .22),
+    calc(var(--lr-background-x) * -.18) calc(var(--lr-background-y) * .17),
+    calc(var(--lr-background-x) * .12) calc(var(--lr-background-y) * -.20),
+    calc(var(--lr-background-x) * -.10) calc(var(--lr-background-y) * -.14),
+    calc(((50% - var(--lr-background-x)) * 2.5) + 50%) calc(((50% - var(--lr-background-y)) * 2.5) + 50%),center;
+  background-blend-mode:screen,color-burn,screen,screen,screen,normal;
+  filter:brightness(.92) contrast(1.08) saturate(1.25)!important;
+  mix-blend-mode:screen!important;
+}
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-shine::before{
+  opacity:.14!important;
+  background:radial-gradient(circle at var(--lr-pointer-x) var(--lr-pointer-y),rgba(110,185,255,.42),transparent 32%),radial-gradient(circle at 35% 55%,rgba(198,95,255,.30),transparent 36%);
+  mix-blend-mode:screen!important;
+}
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-shine::after{
+  opacity:.24!important;
+  background:radial-gradient(farthest-corner circle at var(--lr-pointer-x) var(--lr-pointer-y),rgba(240,250,255,.48),rgba(195,215,225,.06) 28%,transparent 72%)!important;
+  mix-blend-mode:screen!important;
+}
+
+/* AMAZING RARE */
+.game-card.holo[data-holo-style="amazing"] .lr-simey-shine{opacity:0!important}
+.game-card.holo[data-holo-style="amazing"] .lr-simey-foil{
+  opacity:calc(.12 + (var(--lr-card-opacity,0) * .38))!important;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.75) 0 1px,transparent 1.8px),
+    radial-gradient(circle,rgba(255,236,170,.68) 0 .8px,transparent 1.6px),
+    radial-gradient(ellipse at 18% 28%,rgba(255,56,135,.55),transparent 26%),
+    radial-gradient(ellipse at 78% 24%,rgba(72,220,255,.54),transparent 27%),
+    radial-gradient(ellipse at 63% 79%,rgba(255,235,64,.48),transparent 30%),
+    linear-gradient(118deg,rgba(255,74,190,.46),rgba(80,220,255,.48) 32%,rgba(255,245,105,.48) 55%,rgba(126,255,155,.42) 76%,rgba(213,98,255,.46));
+  background-size:19px 19px,31px 31px,180% 180%,180% 180%,180% 180%,260% 260%;
+  background-position:
+    calc(var(--lr-background-x) * .7) calc(var(--lr-background-y) * .7),
+    calc(var(--lr-background-x) * -.45) calc(var(--lr-background-y) * -.45),
+    calc(var(--lr-background-x) * .35) calc(var(--lr-background-y) * .2),
+    calc(var(--lr-background-x) * -.25) calc(var(--lr-background-y) * .2),
+    calc(var(--lr-background-x) * .1) calc(var(--lr-background-y) * -.3),
+    calc(((50% - var(--lr-background-x)) * 2) + 50%) calc(((50% - var(--lr-background-y)) * 2) + 50%);
+  background-blend-mode:screen,screen,lighten,lighten,lighten,screen;
+  filter:brightness(.96) contrast(1.08) saturate(1.28);
+  mix-blend-mode:screen;
+}
+.game-card.holo[data-holo-style="amazing"] .lr-simey-foil::after{
+  background:radial-gradient(farthest-corner circle at var(--lr-pointer-x) var(--lr-pointer-y),rgba(255,255,255,.50) 0%,rgba(255,255,255,.08) 20%,transparent 50%);
+  mix-blend-mode:screen;
+}
+
+/* RADIANT */
+.game-card.holo[data-holo-style="radiant"] .lr-simey-shine{opacity:0!important}
+.game-card.holo[data-holo-style="radiant"] .lr-simey-foil{
+  opacity:calc(.10 + (var(--lr-card-opacity,0) * .34))!important;
+  background-image:
+    repeating-linear-gradient(55deg,rgba(255,161,158,.72) 0 12%,rgba(85,178,255,.72) 24%,rgba(255,199,146,.72) 36%,rgba(130,255,213,.72) 48%,rgba(253,170,239,.72) 60%,rgba(148,241,255,.72) 72%,rgba(255,161,158,.72) 84%),
+    repeating-linear-gradient(45deg,rgba(35,35,35,.45) 0 1.2%,rgba(150,150,150,.36) 1.25% 2.4%,rgba(35,35,35,.42) 2.45% 3.6%),
+    repeating-linear-gradient(-45deg,rgba(35,35,35,.42) 0 1.2%,rgba(160,160,160,.34) 1.25% 2.4%,rgba(35,35,35,.42) 2.45% 3.6%);
+  background-size:520% 520%,190% 190%,190% 190%;
+  background-position:
+    calc(((50% - var(--lr-background-x)) * 2.5) + 50%) calc(((50% - var(--lr-background-y)) * 2.5) + 50%),
+    calc(var(--lr-background-x) * 1.4) calc(var(--lr-background-y) * 1.4),
+    calc(var(--lr-background-x) * -1.2) calc(var(--lr-background-y) * -1.2);
+  background-blend-mode:screen,screen,overlay;
+  filter:brightness(.96) contrast(1.18) saturate(1.12);
+  mix-blend-mode:screen;
+}
+.game-card.holo[data-holo-style="radiant"] .lr-simey-foil::after{
+  background:radial-gradient(ellipse at calc((var(--lr-pointer-x) * .5) + 25%) calc((var(--lr-pointer-y) * .5) + 25%),rgba(255,255,255,.34) 5%,rgba(180,205,215,.06) 28%,transparent 60%);
+  mix-blend-mode:screen;
+}
+
+/* TRAINER GALLERY */
+.game-card.holo[data-holo-style="trainer"] .lr-simey-shine{opacity:0!important}
+.game-card.holo[data-holo-style="trainer"] .lr-simey-foil{
+  opacity:calc(.09 + (var(--lr-card-opacity,0) * .32))!important;
+  background-image:repeating-linear-gradient(-22deg,rgba(174,102,202,.55) 0 5%,rgba(228,77,72,.55) 10%,rgba(216,197,55,.55) 15%,rgba(124,201,62,.55) 20%,rgba(80,177,170,.55) 25%,rgba(136,160,255,.55) 30%,rgba(176,105,204,.55) 35%);
+  background-size:300% 500%;
+  background-position:calc(var(--lr-background-x) * 1.4) calc(var(--lr-background-y) * 2);
+  filter:brightness(.92) contrast(1.18) saturate(1.08);
+  mix-blend-mode:screen;
+}
+.game-card.holo[data-holo-style="trainer"] .lr-simey-foil::after{
+  background:radial-gradient(farthest-corner ellipse at calc((var(--lr-pointer-x) * .5) + 25%) calc((var(--lr-pointer-y) * .5) + 25%),rgba(255,255,255,.42) 5%,rgba(170,185,210,.08) 26%,transparent 72%);
+  background-size:200% 200%;
+  filter:none;
+  mix-blend-mode:screen;
+}
+
+/* V FULL ART */
+.game-card.holo[data-holo-style="v-full"] .lr-simey-shine{opacity:0!important}
+.game-card.holo[data-holo-style="v-full"] .lr-simey-foil{
+  opacity:calc(.10 + (var(--lr-card-opacity,0) * .34))!important;
+  background-image:
+    repeating-linear-gradient(133deg,rgba(255,119,115,.72) 0 5%,rgba(255,237,95,.72) 10%,rgba(168,255,95,.72) 15%,rgba(131,255,247,.72) 20%,rgba(120,148,255,.72) 25%,rgba(216,117,255,.72) 30%,rgba(255,119,115,.72) 35%),
+    repeating-linear-gradient(133deg,rgba(40,48,72,.42) 0 3.8%,rgba(172,190,190,.36) 4.5%,rgba(40,48,72,.42) 5.2% 12%),
+    repeating-linear-gradient(28deg,transparent 0 6px,rgba(255,255,255,.10) 6px 7px,transparent 7px 13px),
+    repeating-linear-gradient(118deg,transparent 0 9px,rgba(0,0,0,.10) 9px 10px,transparent 10px 18px);
+  background-size:220% 700%,300% 600%,46px 46px,63px 63px;
+  background-position:
+    0 calc(var(--lr-background-y) * 4),
+    var(--lr-background-x) var(--lr-background-y),
+    calc(var(--lr-background-x) * .8) calc(var(--lr-background-y) * -.7),
+    calc(var(--lr-background-x) * -.55) calc(var(--lr-background-y) * .6);
+  background-blend-mode:hue,soft-light,screen,overlay;
+  filter:brightness(.94) contrast(1.18) saturate(1.25);
+  mix-blend-mode:screen;
+}
+.game-card.holo[data-holo-style="v-full"] .lr-simey-foil::after{
+  background:radial-gradient(circle at var(--lr-pointer-x) var(--lr-pointer-y),rgba(255,255,255,.34),rgba(255,255,255,.04) 30%,transparent 72%);
+  mix-blend-mode:screen;
+}
+
+/* VMAX ALTERNATE / RAINBOW */
+.game-card.holo[data-holo-style="vmax"] .lr-simey-shine{opacity:0!important}
+.game-card.holo[data-holo-style="vmax"] .lr-simey-foil{
+  opacity:calc(.13 + (var(--lr-card-opacity,0) * .38))!important;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.78) 0 1px,transparent 1.7px),
+    radial-gradient(circle,rgba(255,225,245,.64) 0 .8px,transparent 1.5px),
+    repeating-linear-gradient(-20deg,rgba(253,71,65,.72) 0 7%,rgba(255,243,151,.72) 14%,rgba(168,255,95,.72) 21%,rgba(131,255,247,.72) 28%,rgba(75,198,255,.72) 35%,rgba(255,73,246,.72) 42%,rgba(255,56,49,.72) 49%),
+    repeating-linear-gradient(130deg,rgba(89,46,80,.30) 0 2.5%,rgba(184,230,191,.40) 5%,rgba(223,96,202,.42) 7.5%,rgba(62,197,197,.40) 10%,rgba(45,52,75,.28) 15%),
+    repeating-linear-gradient(35deg,transparent 0 7px,rgba(255,255,255,.08) 7px 8px,transparent 8px 15px);
+  background-size:17px 17px,29px 29px,500% 500%,1000% 1000%,55px 55px;
+  background-position:
+    calc(var(--lr-background-x) * .95) calc(var(--lr-background-y) * .95),
+    calc(var(--lr-background-x) * -.65) calc(var(--lr-background-y) * -.65),
+    0 calc(var(--lr-background-y) * 1.5),
+    var(--lr-background-x) var(--lr-background-y),
+    calc(var(--lr-background-x) * -.4) calc(var(--lr-background-y) * .55);
+  background-blend-mode:screen,screen,screen,soft-light,overlay;
+  filter:brightness(.98) contrast(1.15) saturate(1.35);
+  mix-blend-mode:screen;
+}
+.game-card.holo[data-holo-style="vmax"] .lr-simey-foil::after{
+  background:radial-gradient(farthest-corner circle at var(--lr-pointer-x) var(--lr-pointer-y),rgba(255,255,255,.46) 0%,rgba(255,255,255,.07) 22%,transparent 50%);
+  mix-blend-mode:screen;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .game-card.holo[data-holo-style] .lr-simey-foil{background-position:center!important}
+}
+body.reduce-motion .game-card.holo[data-holo-style] .lr-simey-foil{background-position:center!important}
