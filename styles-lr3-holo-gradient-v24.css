@@ -1,0 +1,31 @@
+/* LR3.24 — remove the hard vertical color bands from Galaxy / Cosmos.
+   The previous repeating rainbow used adjacent hard stops, which read as translucent panels.
+   This pass keeps the galaxy texture but changes the color field to continuously interpolated gradients. */
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-foil{
+  background-image:
+    var(--lr23-galaxy),
+    linear-gradient(
+      82deg,
+      rgba(255,92,120,.34) 0%,
+      rgba(255,205,105,.30) 17%,
+      rgba(145,225,130,.28) 34%,
+      rgba(95,215,215,.28) 50%,
+      rgba(105,150,240,.30) 67%,
+      rgba(195,110,240,.32) 84%,
+      rgba(245,105,175,.34) 100%
+    ),
+    radial-gradient(
+      ellipse 80% 68% at var(--lr-pointer-x) var(--lr-pointer-y),
+      rgba(255,255,255,.24) 0%,
+      rgba(185,225,255,.10) 38%,
+      transparent 74%
+    )!important;
+  background-size:cover,260% 260%,cover!important;
+  background-position:
+    center,
+    calc(50% + (var(--lr-background-x) - 50%) * 2) calc(50% + (var(--lr-background-y) - 50%) * 2),
+    center!important;
+  background-repeat:no-repeat!important;
+  background-blend-mode:soft-light,screen,screen!important;
+  filter:brightness(1.02) contrast(1.025) saturate(1.04)!important;
+}
