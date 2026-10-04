@@ -1,11 +1,38 @@
 (() => {
-  const BUILD='LR3.18';
+  const BUILD='LR3.31';
   const REPLAY_WHISPER_RATE=.25;
   state.battle ||= {};
+  state.battle.firstClearWhispersByOperation ||= {};
 
   const frontierOperation=()=>state.highestCleared>=100?100:Math.max(1,(Number(state.highestCleared)||0)+1);
   const hasUnclearedFrontier=()=>Number(state.highestCleared||0)<100;
   const isReplay=()=>!!state.battle.replayActive && Number(state.currentOperation)<=Number(state.highestCleared||0);
+
+  /* First-clear Whispers historically depended on the player's Hideout/pack tier at
+     the moment the Operation was cleared. Record that exact value from now on so a
+     replay can always pay 25% of THAT Operation's own initial target drop.
+
+     Old saves predate this ledger. For them, estimate the maximum Hideout level that
+     could have been unlocked at that Operation, then use that tier's base pack cost.
+     This prevents OP 1 from inheriting the reward value of the player's newest clear. */
+  function estimatedOriginalWhispers(op){
+    op=Math.max(1,Number(op)||1);
+    let eligibleHideout=1;
+    for(let level=2;level<=20;level++){
+      if(Number(GD.hideoutOperationReq(level))<=op)eligibleHideout=level;
+      else break;
+    }
+    const tier=GD.tierForHideout(eligibleHideout);
+    const basePackCost=typeof GD.packBaseCost==='function'?GD.packBaseCost(tier):packCost(tier);
+    return Math.max(0,Number(basePackCost)||0)*.05;
+  }
+  function originalWhispersFor(op){
+    const saved=Number(state.battle.firstClearWhispersByOperation?.[op]);
+    return saved>0?saved:estimatedOriginalWhispers(op);
+  }
+  function replayWhispersFor(op){
+    return Math.max(1,Math.round(originalWhispersFor(op)*REPLAY_WHISPER_RATE));
+  }
 
   function snapshotFrontier(){
     if(state.battle.frontierSnapshot||!hasUnclearedFrontier())return;
@@ -86,13 +113,25 @@
   const baseHandleEnemyKilled=window.handleEnemyKilled;
   window.handleEnemyKilled=function(){
     const enemy=state.battle.enemy;
-    if(!isReplay()||!enemy?.target)return baseHandleEnemyKilled();
+
+    /* Capture the exact first-clear target Whisper drop before the base handler
+       advances highestCleared/currentOperation. Never overwrite an existing record. */
+    if(!isReplay()){
+      if(enemy?.target){
+        const op=Number(state.currentOperation)||1;
+        const firstClear=op>Number(state.highestCleared||0);
+        if(firstClear&&!Number(state.battle.firstClearWhispersByOperation[op])){
+          state.battle.firstClearWhispersByOperation[op]=packCost(GD.tierForHideout(state.hideoutLevel))*.05;
+        }
+      }
+      return baseHandleEnemyKilled();
+    }
+    if(!enemy?.target)return baseHandleEnemyKilled();
 
     const op=Number(state.currentOperation)||1,e=effectTotals(),mult=GD.targetRewardMultiplier();
     let gold=GD.normalGold(op)*mult*(1+e.bookkeeper);
     let intel=GD.normalIntel(op)*mult*(1+e.informant)*(1+e.contractInsight);
-    const firstClearWhispers=packCost(GD.tierForHideout(state.hideoutLevel))*.05;
-    const whispers=Math.max(1,Math.round(firstClearWhispers*REPLAY_WHISPER_RATE));
+    const whispers=replayWhispersFor(op);
 
     addGold(gold);addIntel(intel);addWhispers(whispers);
     state.stats.totalKills++;state.stats.targetsKilled++;
@@ -121,9 +160,10 @@
     const op=Number(state.currentOperation)||1,frontier=frontierOperation();
     const nav=document.createElement('div');nav.className='lr318-operation-nav';
     const replay=op<=Number(state.highestCleared||0);
+    const replayReward=replay?replayWhispersFor(op):0;
     nav.innerHTML=`
       <button class="mini-btn" data-lr-op="${op-1}" ${op<=1?'disabled':''}>← PREV OP</button>
-      <div class="lr318-operation-status"><b>${replay?'REPLAY':'CURRENT PROGRESS'}</b><small>${replay?`${Math.round(REPLAY_WHISPER_RATE*100)}% WHISPER REWARD`:`OP ${op} OF ${frontier}`}</small></div>
+      <div class="lr318-operation-status"><b>${replay?'REPLAY':'CURRENT PROGRESS'}</b><small>${replay?`${Math.round(REPLAY_WHISPER_RATE*100)}% OF OP ${op} ORIGINAL · ${GD.formatNum(replayReward)} WHISPERS`:`OP ${op} OF ${frontier}`}</small></div>
       <button class="mini-btn" data-lr-op="${op+1}" ${op>=frontier?'disabled':''}>NEXT OP →</button>`;
     head.insertAdjacentElement('afterend',nav);
     nav.querySelectorAll('[data-lr-op]').forEach(b=>b.onclick=()=>selectOperation(b.dataset.lrOp));
@@ -132,5 +172,5 @@
   const baseRenderBattle=window.renderBattle;
   window.renderBattle=function(){const out=baseRenderBattle.apply(this,arguments);injectOperationNav();return out;};
 
-  window.LR3OperationReplay={build:BUILD,replayWhisperRate:REPLAY_WHISPER_RATE,selectOperation};
+  window.LR3OperationReplay={build:BUILD,replayWhisperRate:REPLAY_WHISPER_RATE,selectOperation,originalWhispersFor,replayWhispersFor};
 })();
