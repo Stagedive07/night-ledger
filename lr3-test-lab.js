@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR3.24';
+  const BUILD='LR3.25';
   const CROOKED='t1-c05';
   const HOLOS=[
     ['galaxy','GALAXY / COSMOS'],
