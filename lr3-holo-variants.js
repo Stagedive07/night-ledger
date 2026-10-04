@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR3.12';
+  const BUILD='LR3.30';
   const STYLES=['galaxy','amazing','radiant','trainer','v-full','vmax'];
   const validStyle=s=>STYLES.includes(s);
 
