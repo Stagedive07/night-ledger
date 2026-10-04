@@ -1,11 +1,10 @@
-/* LR3.25 — authoritative holo visual layer.
-   Restore the LR3.12-era styles the user preferred for Amazing/Trainer/VMAX by
-   allowing styles-lr3-holo-variants-v2.css to own them again.
-   Keep the CURRENT Radiant and V Full Art looks exactly as they were in LR3.24.
-   Galaxy/Cosmos keeps the user-supplied galaxy texture, but uses ONLY soft radial
-   color fields so there can be no hard vertical rainbow panels. */
+/* LR3.26 — authoritative holo visual layer.
+   Amazing/Trainer/VMAX use the preferred LR3.12 baseline.
+   Radiant and V Full Art preserve the approved LR3.24 appearance.
+   Galaxy/Cosmos uses the supplied galaxy texture BOUND to the card: the texture
+   itself never pans with pointer movement. Only the gradient highlight and glare move. */
 
-/* GALAXY / COSMOS — supplied galaxy texture + soft color washes, no linear bands. */
+/* GALAXY / COSMOS — static card-bound texture, dynamic light only. */
 .game-card.holo[data-holo-style="galaxy"] .lr-simey-shine{
   opacity:0!important;
 }
@@ -30,9 +29,10 @@
       rgba(80,125,245,.06) 44%,
       transparent 76%
     ),
-    url("assets/holo/galaxy-texture.svg?v=LR3.25")!important;
-  background-size:cover,cover,cover,125% 125%!important;
-  background-position:center,center,center,var(--lr-background-x) var(--lr-background-y)!important;
+    url("assets/holo/galaxy-texture.svg?v=LR3.26")!important;
+  /* First three layers are lighting. The galaxy texture is always center/cover. */
+  background-size:cover,cover,cover,cover!important;
+  background-position:center,center,center,center!important;
   background-repeat:no-repeat!important;
   background-blend-mode:screen,soft-light,soft-light,normal!important;
   filter:brightness(.99) contrast(1.025) saturate(1.06)!important;
@@ -48,7 +48,7 @@
   mix-blend-mode:screen!important;
 }
 
-/* RADIANT — preserve the current LR3.24 appearance. */
+/* RADIANT — preserve the approved appearance. */
 .game-card.holo[data-holo-style="radiant"] .lr-simey-shine{
   opacity:0!important;
 }
@@ -72,7 +72,7 @@
   mix-blend-mode:screen!important;
 }
 
-/* V FULL ART — preserve the current LR3.24 appearance. */
+/* V FULL ART — preserve the approved appearance. */
 .game-card.holo[data-holo-style="v-full"] .lr-simey-shine{
   opacity:0!important;
 }
@@ -97,5 +97,5 @@
 }
 
 /* Amazing Rare, Trainer Gallery and VMAX intentionally have NO override here.
-   Their effective visual definitions now come directly from the LR3.12
+   Their effective visual definitions come directly from the preferred
    styles-lr3-holo-variants-v2.css baseline. */
