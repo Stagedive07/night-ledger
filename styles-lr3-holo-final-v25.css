@@ -1,0 +1,101 @@
+/* LR3.25 — authoritative holo visual layer.
+   Restore the LR3.12-era styles the user preferred for Amazing/Trainer/VMAX by
+   allowing styles-lr3-holo-variants-v2.css to own them again.
+   Keep the CURRENT Radiant and V Full Art looks exactly as they were in LR3.24.
+   Galaxy/Cosmos keeps the user-supplied galaxy texture, but uses ONLY soft radial
+   color fields so there can be no hard vertical rainbow panels. */
+
+/* GALAXY / COSMOS — supplied galaxy texture + soft color washes, no linear bands. */
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-shine{
+  opacity:0!important;
+}
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-foil{
+  opacity:calc(.07 + (var(--lr-card-opacity,0) * .23))!important;
+  background-image:
+    radial-gradient(
+      ellipse 95% 82% at var(--lr-pointer-x) var(--lr-pointer-y),
+      rgba(255,255,255,.20) 0%,
+      rgba(205,230,255,.08) 34%,
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 105% 92% at 6% 10%,
+      rgba(245,80,195,.13) 0%,
+      rgba(145,80,235,.07) 42%,
+      transparent 74%
+    ),
+    radial-gradient(
+      ellipse 105% 92% at 94% 90%,
+      rgba(65,210,245,.12) 0%,
+      rgba(80,125,245,.06) 44%,
+      transparent 76%
+    ),
+    url("assets/holo/galaxy-texture.svg?v=LR3.25")!important;
+  background-size:cover,cover,cover,125% 125%!important;
+  background-position:center,center,center,var(--lr-background-x) var(--lr-background-y)!important;
+  background-repeat:no-repeat!important;
+  background-blend-mode:screen,soft-light,soft-light,normal!important;
+  filter:brightness(.99) contrast(1.025) saturate(1.06)!important;
+  mix-blend-mode:screen!important;
+}
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-foil::before,
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-foil::after{
+  background:none!important;
+  opacity:0!important;
+}
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-glare{
+  opacity:calc(.005 + (var(--lr-card-opacity,0) * .035))!important;
+  mix-blend-mode:screen!important;
+}
+
+/* RADIANT — preserve the current LR3.24 appearance. */
+.game-card.holo[data-holo-style="radiant"] .lr-simey-shine{
+  opacity:0!important;
+}
+.game-card.holo[data-holo-style="radiant"] .lr-simey-foil{
+  opacity:calc(.05 + (var(--lr-card-opacity,0) * .20))!important;
+  background-image:
+    repeating-linear-gradient(45deg,rgba(255,255,255,.42) 0 1px,transparent 1px 9px),
+    repeating-linear-gradient(-45deg,rgba(255,255,255,.34) 0 1px,transparent 1px 9px),
+    repeating-linear-gradient(55deg,rgba(255,145,155,.7) 0 12%,rgba(80,175,255,.68) 24%,rgba(255,205,130,.66) 36%,rgba(115,255,205,.66) 48%,rgba(245,155,235,.68) 60%,rgba(145,235,255,.68) 72%,rgba(255,145,155,.7) 84%)!important;
+  background-size:18px 18px,18px 18px,460% 460%!important;
+  background-position:
+    calc(var(--lr-background-x) * 1.15) calc(var(--lr-background-y) * 1.15),
+    calc(var(--lr-background-x) * -1.05) calc(var(--lr-background-y) * -1.05),
+    calc(((50% - var(--lr-background-x)) * 2.6) + 50%) calc(((50% - var(--lr-background-y)) * 2.6) + 50%)!important;
+  background-blend-mode:screen!important;
+  filter:saturate(1.08) contrast(1.12)!important;
+  mix-blend-mode:screen!important;
+}
+.game-card.holo[data-holo-style="radiant"] .lr-simey-glare{
+  opacity:calc(.005 + (var(--lr-card-opacity,0) * .035))!important;
+  mix-blend-mode:screen!important;
+}
+
+/* V FULL ART — preserve the current LR3.24 appearance. */
+.game-card.holo[data-holo-style="v-full"] .lr-simey-shine{
+  opacity:0!important;
+}
+.game-card.holo[data-holo-style="v-full"] .lr-simey-foil{
+  opacity:calc(.045 + (var(--lr-card-opacity,0) * .195))!important;
+  background-image:
+    repeating-linear-gradient(0deg,rgba(255,95,105,.45) 0 6%,rgba(255,225,90,.42) 12%,rgba(145,245,105,.40) 18%,rgba(95,230,225,.40) 24%,rgba(100,135,245,.44) 30%,rgba(205,95,245,.45) 36%,rgba(255,95,105,.45) 42%),
+    repeating-linear-gradient(133deg,rgba(255,255,255,.12) 0 1px,transparent 1px 8px),
+    radial-gradient(circle at var(--lr-pointer-x) var(--lr-pointer-y),rgba(255,255,255,.22),transparent 44%)!important;
+  background-size:220% 680%,44px 44px,160% 160%!important;
+  background-position:
+    0 calc(var(--lr-background-y) * 4),
+    calc(var(--lr-background-x) * .7) calc(var(--lr-background-y) * -.6),
+    center!important;
+  background-blend-mode:hue,soft-light,screen!important;
+  filter:brightness(.98) contrast(1.06) saturate(1.08)!important;
+  mix-blend-mode:screen!important;
+}
+.game-card.holo[data-holo-style="v-full"] .lr-simey-glare{
+  opacity:calc(.005 + (var(--lr-card-opacity,0) * .035))!important;
+  mix-blend-mode:screen!important;
+}
+
+/* Amazing Rare, Trainer Gallery and VMAX intentionally have NO override here.
+   Their effective visual definitions now come directly from the LR3.12
+   styles-lr3-holo-variants-v2.css baseline. */
