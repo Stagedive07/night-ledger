@@ -1,77 +1,51 @@
-/* LR3.29 — authoritative holo visual layer.
-   Amazing/Trainer/VMAX use the preferred LR3.12 baseline.
-   Radiant and V Full Art preserve the approved LR3.24 appearance.
-   Galaxy/Cosmos now follows Simey's actual mask-based approach: the galaxy image is
-   used only as a luminance texture mask over the artwork. Its source colors are not
-   rendered. The foil color/light moves beneath a fixed texture mask. */
+/* LR3.30 — authoritative holo visual layer.
+   Galaxy/Cosmos now uses Simey's uploaded Special Illustration Rare effect directly:
+   rainbow gradient + the exact grayscale sparkles texture + moving glare.
+   No galaxy photograph is rendered or used for color. */
 
-/* GALAXY / COSMOS
-   Simey source pattern used here:
-   - glare/foil is an overlay on top of the artwork
-   - texture images can be used as luminance masks so only their pattern is retained
-   - color/illumination comes from gradients, not from the texture image itself */
-.game-card.holo[data-holo-style="galaxy"] .lr-simey-foil{
-  opacity:0!important;
-  display:none!important;
-}
+/* GALAXY / COSMOS — adapted directly from Simey's uploaded hover-tilt source. */
 .game-card.holo[data-holo-style="galaxy"] .lr-simey-shine{
-  --space:80px;
-  opacity:calc(.08 + (var(--lr-card-opacity,0) * .24))!important;
-
-  /* These are the color/light ingredients from Simey's Galaxy Holo treatment.
-     The galaxy asset itself is deliberately NOT a background image anymore. */
-  background-image:
-    repeating-linear-gradient(
-      82deg,
-      rgb(218,56,50) calc(var(--space) * 1),
-      rgb(219,204,86) calc(var(--space) * 2),
-      rgb(121,199,58) calc(var(--space) * 3),
-      rgb(58,192,183) calc(var(--space) * 4),
-      rgb(71,98,207) calc(var(--space) * 5),
-      rgb(170,69,209) calc(var(--space) * 6),
-      rgb(218,56,50) calc(var(--space) * 10)
-    ),
-    radial-gradient(
-      farthest-corner circle at var(--lr-pointer-x) var(--lr-pointer-y),
-      rgba(255,255,255,.60) 5%,
-      rgba(150,150,150,.30) 40%,
-      rgb(0,0,0) 100%
-    )!important;
-  background-blend-mode:screen!important;
-  background-position:
-    calc(((50% - var(--lr-background-x)) * 2.5) + 50%)
-      calc(((50% - var(--lr-background-y)) * 2.5) + 50%),
-    center!important;
-  background-size:600% 1200%,cover!important;
-  background-repeat:no-repeat!important;
-  filter:brightness(.82) contrast(1.2) saturate(1.05)!important;
-  mix-blend-mode:color-dodge!important;
-
-  /* This is the important part from Simey's newer HoverTilt source: use the image
-     as a LUMINANCE MASK. We keep its stars/nebula/speckle texture, but none of the
-     original galaxy image's hue. The mask is fixed to the art while light moves. */
-  mask-image:url("assets/holo/galaxy-texture.svg?v=LR3.29")!important;
-  mask-mode:luminance!important;
-  mask-position:50% 50%!important;
-  mask-size:cover!important;
-  mask-repeat:no-repeat!important;
+  opacity:0!important;
 }
-.game-card.holo[data-holo-style="galaxy"] .lr-simey-shine::before,
-.game-card.holo[data-holo-style="galaxy"] .lr-simey-shine::after{
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-foil{
+  --lr-simey-rainbow:linear-gradient(to top left,#f9b3eb,#e2a6fc,#88a2f8,#a2f5a9 90%);
+  --lr-simey-sparkles:url("https://raw.githubusercontent.com/simeydotme/hover-tilt/main/apps/docs/public/pokemon/sparkles.webp");
+  --lr-simey-default-glare:radial-gradient(
+    farthest-corner circle at var(--lr-pointer-x) var(--lr-pointer-y),
+    rgba(255,255,255,.95) 8%,
+    rgba(224,235,255,.58) 28%,
+    rgba(10,12,20,.16) 90%
+  );
+
+  /* Simey source: gradient supplies color, grayscale sparkles supplies texture. */
+  background-image:var(--lr-simey-rainbow),var(--lr-simey-sparkles),var(--lr-simey-default-glare)!important;
+  background-size:cover,200px 200px,cover!important;
+  background-position:center,var(--lr-background-x) var(--lr-background-y),center!important;
+  background-repeat:no-repeat,repeat,no-repeat!important;
+  background-blend-mode:color-burn,color-dodge!important;
+  opacity:calc(.035 + (var(--lr-card-opacity,0) * .38))!important;
+  filter:none!important;
+  mix-blend-mode:soft-light!important;
+  z-index:30!important;
+  transform:translateZ(.8px)!important;
+}
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-foil::before,
+.game-card.holo[data-holo-style="galaxy"] .lr-simey-foil::after{
   content:none!important;
   display:none!important;
 }
 .game-card.holo[data-holo-style="galaxy"] .lr-simey-glare{
-  background-image:radial-gradient(
+  z-index:32!important;
+  transform:translateZ(1.15px)!important;
+  background:radial-gradient(
     farthest-corner circle at var(--lr-pointer-x) var(--lr-pointer-y),
-    rgba(222,245,250,.70) 10%,
-    rgba(255,255,255,.50) 20%,
-    rgba(0,0,0,.50) 90%
+    rgba(255,255,255,.56) 0%,
+    rgba(225,245,255,.18) 18%,
+    transparent 58%
   )!important;
-  opacity:calc(.012 + (var(--lr-card-opacity,0) * .09))!important;
+  opacity:calc(.01 + (var(--lr-card-opacity,0) * .09))!important;
   filter:none!important;
   mix-blend-mode:screen!important;
-  transform:translateZ(1.1px)!important;
 }
 
 /* RADIANT — preserve the approved appearance. */
