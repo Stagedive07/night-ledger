@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR3.32';
+  const BUILD='LR3.33';
   const LR=window.LR216;
   if(!LR||typeof window.renderDeck!=='function'||typeof window.render!=='function')return;
 
@@ -36,6 +36,12 @@
     LR.syndicatePick=false;
   }
 
+  function playSwapFlip(){
+    if(typeof window.lr2PlayExactSfx==='function')window.lr2PlayExactSfx('flipUp');
+    else if(window.LR2PackV16?.playSfx)window.LR2PackV16.playSfx('flipUp');
+    else if(typeof window.playUISoundV5==='function')window.playUISoundV5('flip');
+  }
+
   function cardMarkup(inst){
     const cost=inst.level<GD.CARD_LEVEL_CAP?GD.cardLevelCost(inst.tier,inst.level):0;
     return `<div class="deck-slot-v6" data-lr216-hold="${inst.uid}"><button class="deck-card-tap" data-card-detail="${inst.uid}">${gameCardMarkup(inst,{compact:true,showNew:false,hideLore:true,hideAbilityText:true})}</button><button class="deck-level-btn" data-deck-level="${inst.uid}" ${state.gold<cost||inst.level>=GD.CARD_LEVEL_CAP?'disabled':''}>${inst.level>=GD.CARD_LEVEL_CAP?'MAX LEVEL':`LEVEL UP<span>${GD.formatNum(cost)} GOLD</span>`}</button></div>`;
@@ -46,6 +52,7 @@
       let timer=null,sx=0,sy=0;
       const run=()=>{
         timer=null;
+        playSwapFlip();
         LR.swapTargetUid=el.dataset.lr216Hold;
         LR.syndicatePick=false;
         currentScreen='library';
