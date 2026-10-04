@@ -1,0 +1,8 @@
+/* LR3.34 - Bottom navigation icon colors */
+.bottom-nav .nav-btn[data-nav="battle"] > span{color:#c65359}
+.bottom-nav .nav-btn[data-nav="deck"] > span{color:#4e86a6}
+.bottom-nav .nav-btn[data-nav="packs"] > span{color:#c5a04e}
+.bottom-nav .nav-btn[data-nav="hideout"] > span{color:#b9bdc1}
+.bottom-nav .nav-btn[data-nav="syndicate"] > span{color:#8669ad}
+.bottom-nav .nav-btn[data-nav="library"] > span{color:#5a956b}
+.bottom-nav .nav-btn[data-nav="settings"] > span{color:#f1eee6}
