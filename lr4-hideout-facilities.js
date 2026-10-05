@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR4.4';
+  const BUILD='LR4.5';
   const CORE=window.LR4FacilityCore;
   if(!CORE)return;
   const {CONFIG,MAX_LEVEL}=CORE;
@@ -15,13 +15,10 @@
     return `${Number.isInteger(n)?n.toFixed(0):n.toFixed(1)}%`;
   }
 
-  /* Passive Whisper income. */
   window.whisperRate=whisperRate=function(){
     return CORE.baseWhisperRate(state.hideoutLevel)*(1+bonus('whisperNetwork'));
   };
 
-  /* Operation and offline resource bases. Syndicate Bookkeeper/Informant and
-     Contract Insight remain multiplicative on top of these values. */
   GD.normalGold=function(operation){
     return CORE.baseNormalGold(operation)*(1+bonus('quartermaster'));
   };
@@ -29,8 +26,6 @@
     return CORE.baseNormalIntel(operation)*(1+bonus('intelligenceRoom'));
   };
 
-  /* Armory is true global operative DPS. Because the late Syndicate override also
-     uses GD.cardDps for support cards, leave support values untouched here. */
   const baseCardDps=GD.cardDps.bind(GD);
   GD.cardDps=function(inst){
     const value=baseCardDps(inst);
@@ -39,9 +34,6 @@
     return value*(1+bonus('armory'));
   };
 
-  /* Recalculate Syndicate totals with the Office multiplier before applying the
-     existing caps. This keeps the room useful without allowing capped support
-     effects to grow beyond their intended limits. */
   const baseEffectTotals=window.effectTotals||effectTotals;
   window.effectTotals=effectTotals=function(){
     const totals=baseEffectTotals.apply(this,arguments);
@@ -74,9 +66,6 @@
     host.appendChild(el);setTimeout(()=>el.classList.add('show'),10);setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),250);},1900);
   }
 
-  /* Contract Desk boosts both first clears and replays, but does not alter the
-     canonical recorded first-clear value. A later upgrade therefore improves old
-     replay farming too. */
   const baseHandleEnemyKilled=window.handleEnemyKilled;
   window.handleEnemyKilled=handleEnemyKilled=function(){
     const target=!!state.battle?.enemy?.target;
@@ -133,8 +122,6 @@
     render();
   }
 
-  /* Add the six rooms to Hideout while replacing the old standalone Network Output
-     panel so Hideout remains compact on mobile. */
   const baseRenderHideout=window.renderHideout;
   window.renderHideout=renderHideout=function(){
     const out=baseRenderHideout.apply(this,arguments);
@@ -149,13 +136,12 @@
 
     const panel=document.createElement('div');
     panel.className='pixel-panel tight lr44-facilities-panel';
-    panel.innerHTML=`<div class="panel-title"><h3>FACILITIES</h3><small>LEVEL CAP · HIDEOUT ${state.hideoutLevel}</small></div><div class="lr44-facility-grid">${Object.keys(CONFIG).map(facilityCard).join('')}</div>`;
+    panel.innerHTML=`<div class="panel-title"><h3>HIDEOUT ROOMS</h3><small>LEVEL CAP · HIDEOUT ${state.hideoutLevel}</small></div><div class="lr44-facility-grid">${Object.keys(CONFIG).map(facilityCard).join('')}</div>`;
     screen.appendChild(panel);
     panel.querySelectorAll('[data-lr44-facility]').forEach(btn=>btn.onclick=()=>upgradeFacility(btn.dataset.lr44Facility));
     return out;
   };
 
-  /* Replay navigation should show the actual reward after Contract Desk. */
   if(typeof window.renderBattle==='function'){
     const baseRenderBattle=window.renderBattle;
     window.renderBattle=renderBattle=function(){
@@ -172,8 +158,27 @@
     };
   }
 
+  /* Hideout now contains enough interactive content that it needs its own mobile
+     scroll area. Toggle it at the top-level render so the behavior disappears as
+     soon as the player moves to another tab. */
+  const baseRender=window.render||render;
+  window.render=render=function(){
+    screen.classList.toggle('lr45-hideout-scroll',currentScreen==='hideout');
+    return baseRender.apply(this,arguments);
+  };
+
   const style=document.createElement('style');
   style.textContent=`
+    .screen.lr45-hideout-scroll{
+      height:calc(100dvh - 132px - var(--safe-top) - var(--safe-bottom));
+      max-height:calc(100dvh - 132px - var(--safe-top) - var(--safe-bottom));
+      overflow-y:auto;
+      overflow-x:hidden;
+      overscroll-behavior-y:contain;
+      -webkit-overflow-scrolling:touch;
+      touch-action:pan-y;
+      padding-bottom:44px;
+    }
     .lr44-facilities-panel{margin-top:8px;padding:9px!important}
     .lr44-facility-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
     .lr44-facility{min-width:0;border:1px solid #2b3239;background:#11161b;padding:7px}
