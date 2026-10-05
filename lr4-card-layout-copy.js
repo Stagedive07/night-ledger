@@ -9,8 +9,6 @@
   function conciseAbilityText(def,inst=null){
     const a=def?.ability;
     if(!a)return'';
-
-    /* Syndicate cards have an individually rolled support value that scales with level. */
     let v=Number(a.value)||0;
     if(a.zone==='syndicate'&&inst&&window.LR2SyndicateR6?.supportValue){
       v=Number(window.LR2SyndicateR6.supportValue(inst))||v;
@@ -44,12 +42,14 @@
   function decorateCard(card,inst=null){
     if(!card)return;
     const art=card.querySelector('.game-card-art');
-    if(!art)return;
+    const head=card.querySelector('.game-card-head');
+    if(!art||!head)return;
 
     const level=card.querySelector('.game-card-level');
     if(level){
-      level.classList.add('lr412-art-level');
-      if(level.parentElement!==art)art.appendChild(level);
+      level.classList.remove('lr412-art-level');
+      level.classList.add('lr412-head-level');
+      if(level.parentElement!==head)head.appendChild(level);
     }
 
     const stat=card.querySelector('.game-card-dps');
@@ -79,7 +79,6 @@
     return markupWithNewLayout(baseMarkup.call(this,inst,opts),inst);
   };
 
-  /* Keep card detail copy just as concise as the card face. */
   const baseShowDefinitionDetail=window.showDefinitionDetail;
   if(typeof baseShowDefinitionDetail==='function'){
     window.showDefinitionDetail=showDefinitionDetail=function(defId,instId=null){
@@ -94,15 +93,37 @@
     };
   }
 
-  /* Apply immediately to any cards already on screen when this late patch loads. */
   document.querySelectorAll('.game-card').forEach(card=>decorateCard(card,null));
 
   const style=document.createElement('style');
   style.textContent=`
+    .game-card-head{position:relative!important;height:auto!important;min-height:0!important;overflow:visible!important;padding-right:54px!important}
+    .game-card-head .lr412-head-level{
+      position:absolute!important;
+      right:5px!important;
+      bottom:5px!important;
+      top:auto!important;
+      left:auto!important;
+      z-index:8!important;
+      width:auto!important;
+      height:auto!important;
+      margin:0!important;
+      padding:2px 5px!important;
+      background:rgba(9,12,15,.88)!important;
+      border:1px solid rgba(184,190,197,.45)!important;
+      line-height:1.05!important;
+      white-space:nowrap!important;
+      font-size:10px!important;
+      pointer-events:none!important;
+    }
+
     .game-card-art{position:relative!important;overflow:hidden}
-    .game-card-art .lr412-art-level,
     .game-card-art .lr412-art-stat{
       position:absolute!important;
+      right:5px!important;
+      bottom:5px!important;
+      left:auto!important;
+      top:auto!important;
       z-index:8!important;
       width:auto!important;
       height:auto!important;
@@ -112,21 +133,18 @@
       border:1px solid rgba(184,190,197,.55)!important;
       line-height:1.05!important;
       white-space:nowrap!important;
+      font-size:10px!important;
       pointer-events:none!important;
     }
-    .game-card-art .lr412-art-level{top:5px!important;right:5px!important;left:auto!important;bottom:auto!important;font-size:10px!important}
-    .game-card-art .lr412-art-stat{right:5px!important;bottom:5px!important;left:auto!important;top:auto!important;font-size:10px!important}
 
-    /* The lower card panel is now reserved for ability/lore copy. */
     .game-card-bottom{height:auto!important;min-height:0!important;overflow:visible!important;padding-bottom:8px!important}
     .game-card-ability,.game-card-lore{max-height:none!important;overflow:visible!important;-webkit-line-clamp:unset!important;line-clamp:unset!important}
 
-    /* Long names wrap instead of ever being truncated. */
     .game-card-name{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;max-width:none!important;-webkit-line-clamp:unset!important;line-clamp:unset!important;overflow-wrap:anywhere!important}
-    .game-card-head{height:auto!important;min-height:0!important;overflow:visible!important}
 
     @media(min-width:500px){
-      .game-card-art .lr412-art-level,.game-card-art .lr412-art-stat{font-size:12px!important;padding:4px 7px!important}
+      .game-card-head .lr412-head-level,.game-card-art .lr412-art-stat{font-size:12px!important;padding:4px 7px!important}
+      .game-card-head{padding-right:66px!important}
     }
   `;
   document.head.appendChild(style);
