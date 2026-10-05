@@ -33,7 +33,6 @@
   window.gameCardMarkup=gameCardMarkup=function(inst,opts={}){
     let html=baseMarkup(inst,opts);
     if(!supportDef(inst)||opts.hideAbilityText)return html;
-    const oldText=window.LR2SyndicateR6?.supportText===conciseSupportText?null:null;
     const def=getDef(inst);
     const original=def?.ability?.text?escapeHtml(def.ability.text):'';
     const verbose=(()=>{
@@ -136,7 +135,8 @@
     const inst=uid?getInstance(uid):null;
     if(!supportDef(inst))return;
     const ability=modalRoot.querySelector('.lr-detail-ability p');
-    if(ability)ability.textContent=conciseSupportText(inst);
+    const concise=conciseSupportText(inst);
+    if(ability&&ability.textContent!==concise)ability.textContent=concise;
     const btn=document.getElementById('detail-level');
     if(btn&&inst.level<GD.CARD_LEVEL_CAP){
       const cost=GD.cardLevelCost(inst.tier,inst.level);
@@ -148,9 +148,7 @@
   const detailObserver=new MutationObserver(()=>{if(modalOpen)decorateDetail();});
   detailObserver.observe(modalRoot,{subtree:true,childList:true,characterData:true});
 
-  function directIntelGainForHideout(){
-    return 0;
-  }
+  function directIntelGainForHideout(){return 0;}
 
   function injectHideoutPreview(){
     if(currentScreen!=='hideout'||!state.unlocks.hideout)return;
@@ -167,7 +165,7 @@
     const intelGain=directIntelGainForHideout(target,future);
     const preview=document.createElement('div');
     preview.className='pixel-panel lr49-next-hideout';
-    preview.innerHTML=`<div class="panel-title"><h3>NEXT</h3><small>AFTER LEVEL ${target}</small></div><div class="lr49-next-level">LEVEL ${future}</div><div class="lr49-next-output"><div class="stat"><small>WHISPERS / HR</small><b>+${GD.formatNum(whisperGain)}</b></div><div class="stat"><small>INTEL / HR</small><b>+${GD.formatNum(intelGain)}</b></div></div>`;
+    preview.innerHTML=`<div class="panel-title"><h3>NEXT</h3><small>AFTER LEVEL ${target}</small></div><div class="lr49-next-level">LEVEL ${future}</div><div class="lr49-next-output"><div class="stat"><small>COST</small><b>${GD.formatNum(GD.hideoutIntelCost(future))} INTEL</b></div><div class="stat"><small>WHISPERS / HR</small><b>+${GD.formatNum(whisperGain)}</b></div><div class="stat"><small>INTEL / HR</small><b>+${GD.formatNum(intelGain)}</b></div></div>`;
     grid.appendChild(preview);
   }
 
