@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR4.12';
+  const BUILD='LR4.13';
 
   function pct(v){
     const n=(Number(v)||0)*100;
@@ -79,6 +79,32 @@
     return markupWithNewLayout(baseMarkup.call(this,inst,opts),inst);
   };
 
+  function fitCardName(name){
+    if(!name?.isConnected)return;
+    name.style.removeProperty('font-size');
+    const width=name.clientWidth;
+    if(width<=0)return;
+    const natural=parseFloat(getComputedStyle(name).fontSize)||14;
+    const needed=name.scrollWidth;
+    if(needed<=width)return;
+    let size=Math.max(6,natural*(width/needed)*0.97);
+    name.style.setProperty('font-size',`${size}px`,'important');
+    if(name.scrollWidth>name.clientWidth&&size>6){
+      size=Math.max(6,size*(name.clientWidth/name.scrollWidth)*0.97);
+      name.style.setProperty('font-size',`${size}px`,'important');
+    }
+  }
+
+  let fitFrame=0;
+  function fitVisibleCardNames(){
+    fitFrame=0;
+    document.querySelectorAll('.game-card-name').forEach(fitCardName);
+  }
+  function scheduleNameFit(){
+    if(fitFrame)return;
+    fitFrame=requestAnimationFrame(fitVisibleCardNames);
+  }
+
   const baseShowDefinitionDetail=window.showDefinitionDetail;
   if(typeof baseShowDefinitionDetail==='function'){
     window.showDefinitionDetail=showDefinitionDetail=function(defId,instId=null){
@@ -89,6 +115,7 @@
       const p=modalRoot.querySelector('.lr-detail-ability p');
       if(p&&def?.ability)p.textContent=conciseAbilityText(def,inst);
       modalRoot.querySelectorAll('.game-card').forEach(card=>decorateCard(card,inst));
+      scheduleNameFit();
       return out;
     };
   }
@@ -97,7 +124,14 @@
 
   const style=document.createElement('style');
   style.textContent=`
-    .game-card-head{position:relative!important;height:auto!important;min-height:0!important;overflow:visible!important;padding-right:54px!important}
+    .game-card-head{
+      position:relative!important;
+      height:auto!important;
+      min-height:0!important;
+      overflow:visible!important;
+      padding-right:5px!important;
+      padding-bottom:27px!important;
+    }
     .game-card-head .lr412-head-level{
       position:absolute!important;
       right:5px!important;
@@ -140,14 +174,41 @@
     .game-card-bottom{height:auto!important;min-height:0!important;overflow:visible!important;padding-bottom:8px!important}
     .game-card-ability,.game-card-lore{max-height:none!important;overflow:visible!important;-webkit-line-clamp:unset!important;line-clamp:unset!important}
 
-    .game-card-name{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;max-width:none!important;-webkit-line-clamp:unset!important;line-clamp:unset!important;overflow-wrap:anywhere!important}
+    .game-card-name{
+      display:block!important;
+      width:100%!important;
+      max-width:100%!important;
+      min-width:0!important;
+      white-space:nowrap!important;
+      overflow:hidden!important;
+      text-overflow:clip!important;
+      overflow-wrap:normal!important;
+      word-break:normal!important;
+      -webkit-line-clamp:unset!important;
+      line-clamp:unset!important;
+    }
 
     @media(min-width:500px){
       .game-card-head .lr412-head-level,.game-card-art .lr412-art-stat{font-size:12px!important;padding:4px 7px!important}
-      .game-card-head{padding-right:66px!important}
+      .game-card-head{padding-right:7px!important;padding-bottom:33px!important}
     }
   `;
   document.head.appendChild(style);
 
-  window.LR4CardLayoutCopy={build:BUILD,conciseAbilityText,decorateCard};
+  const observer=new MutationObserver(mutations=>{
+    for(const mutation of mutations){
+      for(const node of mutation.addedNodes){
+        if(node.nodeType===1&&(node.matches?.('.game-card')||node.querySelector?.('.game-card'))){
+          scheduleNameFit();
+          return;
+        }
+      }
+    }
+  });
+  if(window.screen&&screen instanceof Element)observer.observe(screen,{childList:true,subtree:true});
+  if(window.modalRoot&&modalRoot instanceof Element)observer.observe(modalRoot,{childList:true,subtree:true});
+  window.addEventListener('resize',scheduleNameFit,{passive:true});
+  scheduleNameFit();
+
+  window.LR4CardLayoutCopy={build:BUILD,conciseAbilityText,decorateCard,fitVisibleCardNames};
 })();
