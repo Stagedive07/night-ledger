@@ -67,6 +67,14 @@
     const alreadyApplied=!!b.replayInsideManApplied&&Number(b.replayInsideManOperation)===op;
     if(alreadyApplied)return;
 
+    /* Do not move an already-in-progress replay backward when this patch first
+       loads. Inside Man applies when a replay is actually beginning at 1. */
+    if((Number(b.encounter)||1)>1){
+      b.replayInsideManApplied=true;
+      b.replayInsideManOperation=op;
+      return;
+    }
+
     const skip=Math.max(0,Math.min(3,Math.floor(Number(effectTotals().insideMan)||0)));
     b.encounter=Math.min(24,1+skip);
     b.replayInsideManApplied=true;
