@@ -1,10 +1,10 @@
 (() => {
-  const BUILD='LR4.18';
+  const BUILD='LR4.19';
   const CORE=window.LR4FacilityCore;
   if(!CORE)return;
   const {CONFIG,MAX_LEVEL}=CORE;
   const SYN_KEYS={Architect:'architect',Broker:'broker',Appraiser:'appraiser',Salvager:'salvager',Bookkeeper:'bookkeeper',Informant:'informant','Hideout Keeper':'hideoutKeeper'};
-  const CAPS={architect:.40,broker:.25,appraiser:.25,salvager:1,bookkeeper:.75,informant:.50,hideoutKeeper:Math.max(0,GD.MAX_OFFLINE_HOURS-GD.BASE_OFFLINE_HOURS)};
+  const CAPS={architect:.40,broker:.50,appraiser:.25,salvager:1,bookkeeper:Infinity,informant:Infinity,hideoutKeeper:Math.max(0,GD.MAX_OFFLINE_HOURS-GD.BASE_OFFLINE_HOURS)};
 
   CORE.ensureState();
 
@@ -48,13 +48,17 @@
         if(key)raw[key]+=Number(supportValue(inst))||0;
       });
       Object.keys(raw).forEach(key=>{
-        const base=Math.min(CAPS[key],raw[key]);
-        totals[key]=key==='hideoutKeeper'?Math.min(CAPS[key],base*office):base*office;
+        const value=Math.max(0,Number(raw[key])||0);
+        if(key==='broker')totals[key]=Math.min(CAPS[key],value*office);
+        else if(key==='hideoutKeeper')totals[key]=Math.min(CAPS[key],value*office);
+        else totals[key]=Math.min(CAPS[key],value)*office;
       });
     }else{
       Object.keys(CAPS).forEach(key=>{
-        const base=Math.min(CAPS[key],Number(totals[key])||0);
-        totals[key]=key==='hideoutKeeper'?Math.min(CAPS[key],base*office):base*office;
+        const value=Math.max(0,Number(totals[key])||0);
+        if(key==='broker')totals[key]=Math.min(CAPS[key],value*office);
+        else if(key==='hideoutKeeper')totals[key]=Math.min(CAPS[key],value*office);
+        else totals[key]=Math.min(CAPS[key],value)*office;
       });
     }
     return totals;

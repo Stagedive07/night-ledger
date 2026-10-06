@@ -76,10 +76,10 @@
       const key=SYN_KEYS[def.ability.name];if(key)t[key]+=supportValue(inst);
     });
     t.architect=Math.min(.40,t.architect);
-    t.broker=Math.min(.25,t.broker);
+    t.broker=Math.min(.50,t.broker);
     t.appraiser=Math.min(.25,t.appraiser);
-    t.bookkeeper=Math.min(.75,t.bookkeeper);
-    t.informant=Math.min(.50,t.informant);
+    t.bookkeeper=Math.max(0,t.bookkeeper);
+    t.informant=Math.max(0,t.informant);
     t.salvager=Math.min(1,t.salvager);
     t.hideoutKeeper=Math.min(GD.MAX_OFFLINE_HOURS-GD.BASE_OFFLINE_HOURS,t.hideoutKeeper);
     return t;
