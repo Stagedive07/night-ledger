@@ -1,6 +1,6 @@
 (() => {
-  const BUILD='LR4.1';
-  const COIN_SRC='assets/audio/coin.ogg?v=LR4.1';
+  const BUILD='LR4.14';
+  const COIN_SRC='assets/audio/coin.m4a?v=LR4.14';
   let saveTimer=null,detailRefreshTimer=null;
   let suppressed=null,suppressRestoreTimer=null;
   let audioCtx=null,coinBuffer=null;
@@ -9,6 +9,7 @@
   const clamp01=n=>Math.max(0,Math.min(1,Number(n)||0));
 
   function desiredSfxVolume(){
+    if(state?.settings?.soundEnabled===false)return 0;
     if(suppressed)return suppressed.volume;
     return clamp01(state?.settings?.soundVolume ?? (state?.settings?.sound ? .7 : 0));
   }
@@ -35,14 +36,18 @@
   function playFastCoin(){
     const volume=desiredSfxVolume();
     if(volume<=0)return;
+    if(window.LR4SfxLowLatency?.play){window.LR4SfxLowLatency.play('coin');return;}
     try{
       if(audioCtx&&coinBuffer){
-        if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});
+        if(audioCtx.state!=='running'){
+          if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});
+          return;
+        }
         const src=audioCtx.createBufferSource(),gain=audioCtx.createGain();
         src.buffer=coinBuffer;gain.gain.value=volume;src.connect(gain).connect(audioCtx.destination);src.start(0);return;
       }
       const a=coinFallback[fallbackIndex++%coinFallback.length];
-      if(a){a.pause();a.currentTime=0;a.volume=volume;a.play().catch(()=>{});}
+      if(a&&a.readyState>=2){a.pause();a.currentTime=0;a.volume=volume;a.play().catch(()=>{});}
     }catch(e){}
   }
 
