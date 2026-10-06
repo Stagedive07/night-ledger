@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR4.15';
+  const BUILD='LR4.16';
   const LR=window.LR216=window.LR216||{libraryFilter:0,librarySort:'rarityDps',librarySearch:'',copyCursor:{},swapTargetUid:null,syndicatePick:false,detailUid:null,packPage:0};
 
   function libraryCorpus(def){
@@ -75,7 +75,7 @@
       return;
     }
 
-    const skip=Math.max(0,Math.min(3,Math.floor(Number(effectTotals().insideMan)||0)));
+    const skip=Math.max(0,Math.floor(Number(effectTotals().insideMan)||0));
     b.encounter=Math.min(24,1+skip);
     b.replayInsideManApplied=true;
     b.replayInsideManOperation=op;
@@ -96,7 +96,7 @@
     filterLibraryInPlace,
     replayInsideMan:()=>({
       active:isReplay(),
-      stacks:Math.max(0,Math.min(3,Math.floor(Number(effectTotals().insideMan)||0))),
+      stacks:Math.max(0,Math.floor(Number(effectTotals().insideMan)||0)),
       encounter:Number(state.battle?.encounter)||1
     })
   };
