@@ -1,4 +1,4 @@
-/* LR5.2 — fixed 16:9 enemy art with a scroll-safe sticky encounter card */
+/* LR5.3 — fixed 16:9 enemy art with a scroll-safe sticky encounter card */
 body.lr52-operation-scroll .screen,
 body.lr52-operation-scroll.screen-scroll .screen,
 body.lr52-operation-scroll.screen-fixed .screen{
@@ -6,6 +6,7 @@ body.lr52-operation-scroll.screen-fixed .screen{
   overflow-x:hidden!important;
   -webkit-overflow-scrolling:touch!important;
   overscroll-behavior-y:contain!important;
+  touch-action:pan-y!important;
   padding-bottom:48px!important;
 }
 
@@ -34,6 +35,21 @@ body.lr52-operation-scroll.screen-fixed .screen{
   background:#090b0e;
 }
 
+.enemy-card .art-box .enemy-art-original{
+  position:absolute;
+  inset:0;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  display:block;
+  object-fit:cover!important;
+  object-position:center!important;
+  image-rendering:auto!important;
+  user-select:none;
+  pointer-events:none;
+}
+
 .enemy-card .art-box .enemy-art-sprite{
   position:absolute;
   left:0;
@@ -41,12 +57,12 @@ body.lr52-operation-scroll.screen-fixed .screen{
   width:400%!important;
   max-width:none!important;
   height:800%!important;
+  max-height:none!important;
   display:block;
   object-fit:fill;
   transform:translate(var(--enemy-x,0%),var(--enemy-y,0%));
   transform-origin:top left;
-  image-rendering:pixelated;
-  image-rendering:crisp-edges;
+  image-rendering:auto!important;
   user-select:none;
   pointer-events:none;
 }
