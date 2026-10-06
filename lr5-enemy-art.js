@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR5.3';
+  const BUILD='LR5.4';
 
   /* Exact original filenames supplied by the user. */
   const ORIGINALS=Object.freeze({
@@ -12,12 +12,12 @@
     'Lantern Guard':'LanternGuard.png',
     'Lookout':'Lookout.png',
     'Lord Vane':'Lord Vane.png',
-    'Master Kerr':'Master Kerr.png',
+    'Master Kerr':'Master Kerr (2).png',
     'Minister Sorn':'Minister Sorn.png',
     'Night Watch':'Night Watch.png',
     'Roof Patrol':'RoofPatrol.png',
     'Silent Guard':'Silent Guard.png',
-    'The Ash Bishop':'The Ash Bishop.png',
+    'The Ash Bishop':'The Ash Bishop (2).png',
     'The Black Clerk':'The Black Clerk.png',
     'The Bound Hand':'The Bound Hand.png',
     'The Cipher Saint':'The Cipher Saint.png',
