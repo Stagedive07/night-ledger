@@ -90,7 +90,7 @@ window.GameData = (() => {
     const topUnlock=tierData(packTier).unlock, levelsSinceUnlock=Math.max(0,hideoutLevel-topUnlock), topP=Math.min(.80,TOP_CHANCE_BASE[packTier-1]*Math.pow(1.18,levelsSinceUnlock));
     const probs=new Map([[packTier,topP]]), lowerTiers=[]; for(let d=1;d<=5;d++){const t=packTier-d;if(t>=1)lowerTiers.push({tier:t,weight:LOWER_WEIGHTS[d-1]});}
     const wSum=lowerTiers.reduce((a,b)=>a+b.weight,0); lowerTiers.forEach(x=>probs.set(x.tier,(1-topP)*x.weight/wSum));
-    const capped=Math.min(.25,Math.max(0,appraiserRelative)); if(capped>0){const weighted=[];let total=0;[...probs.entries()].forEach(([tier,p])=>{const rank=tier/packTier,w=p*(1+capped*rank);weighted.push([tier,w]);total+=w});return weighted.map(([tier,w])=>({tier,p:w/total})).sort((a,b)=>a.tier-b.tier)}
+    const capped=Math.max(0,Number(appraiserRelative)||0); if(capped>0){const weighted=[];let total=0;[...probs.entries()].forEach(([tier,p])=>{const rank=tier/packTier,w=p*(1+capped*rank);weighted.push([tier,w]);total+=w});return weighted.map(([tier,w])=>({tier,p:w/total})).sort((a,b)=>a.tier-b.tier)}
     return [...probs.entries()].map(([tier,p])=>({tier,p})).sort((a,b)=>a.tier-b.tier);
   }
   function randomCardDefFromTier(tier){const list=CARDS.filter(c=>c.tier===tier);return list[Math.floor(Math.random()*list.length)]}

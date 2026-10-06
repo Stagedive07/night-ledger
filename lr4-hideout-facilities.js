@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR4.17';
+  const BUILD='LR4.18';
   const CORE=window.LR4FacilityCore;
   if(!CORE)return;
   const {CONFIG,MAX_LEVEL}=CORE;
@@ -47,9 +47,15 @@
         const name=getDef(inst)?.ability?.name,key=SYN_KEYS[name];
         if(key)raw[key]+=Number(supportValue(inst))||0;
       });
-      Object.keys(raw).forEach(key=>{totals[key]=Math.min(CAPS[key],raw[key]*office);});
+      Object.keys(raw).forEach(key=>{
+        const base=Math.min(CAPS[key],raw[key]);
+        totals[key]=key==='hideoutKeeper'?Math.min(CAPS[key],base*office):base*office;
+      });
     }else{
-      Object.keys(CAPS).forEach(key=>{totals[key]=Math.min(CAPS[key],(Number(totals[key])||0)*office);});
+      Object.keys(CAPS).forEach(key=>{
+        const base=Math.min(CAPS[key],Number(totals[key])||0);
+        totals[key]=key==='hideoutKeeper'?Math.min(CAPS[key],base*office):base*office;
+      });
     }
     return totals;
   };

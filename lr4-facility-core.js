@@ -1,5 +1,5 @@
 (() => {
-  const BUILD='LR4.4';
+  const BUILD='LR4.18';
   const MAX_LEVEL=20;
   const CONFIG={
     armory:{name:'Armory',step:.02,coefficient:520,effect:'GLOBAL DPS'},
@@ -61,8 +61,8 @@
       let bookkeeper=Number(e.bookkeeper)||0,informant=Number(e.informant)||0;
       if(!runtimeReady){
         const office=1+bonus('syndicateOffice');
-        bookkeeper=Math.min(.75,bookkeeper*office);
-        informant=Math.min(.50,informant*office);
+        bookkeeper=Math.min(.75,bookkeeper)*office;
+        informant=Math.min(.50,informant)*office;
       }
       g=kills*baseNormalGold(farmOp)*(1+bookkeeper)*(1+bonus('quartermaster'));
       i=kills*baseNormalIntel(farmOp)*(1+informant)*(1+bonus('intelligenceRoom'));
